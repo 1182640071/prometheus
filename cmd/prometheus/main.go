@@ -87,10 +87,15 @@ func init() {
 }
 
 func main() {
+	//var stringBuilder bytes.Buffer
+	//stringBuilder.WriteString("config.file: ")
+	//stringBuilder.WriteString(os.Getenv("config.file"))
+	//fmt.Println(stringBuilder.String())
 	//获取debug环境变量值
 	if os.Getenv("DEBUG") != "" {
 		//程序阻塞概要文件用于保存用户程序中的Goroutine阻塞事件的记录
 		runtime.SetBlockProfileRate(20)
+		//设置采样频率,通过将其设为一个高于0的值来开启锁冲突分析的数据收集
 		runtime.SetMutexProfileFraction(20)
 	}
 
@@ -132,6 +137,7 @@ func main() {
 		promlogConfig: promlog.Config{},
 	}
 
+	fmt.Println("wml " + os.Args[0])
 	a := kingpin.New(filepath.Base(os.Args[0]), "The Prometheus monitoring server")
 
 	a.Version(version.Print("prometheus"))
