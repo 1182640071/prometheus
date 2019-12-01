@@ -87,7 +87,9 @@ func init() {
 }
 
 func main() {
+	//获取debug环境变量值
 	if os.Getenv("DEBUG") != "" {
+		//程序阻塞概要文件用于保存用户程序中的Goroutine阻塞事件的记录
 		runtime.SetBlockProfileRate(20)
 		runtime.SetMutexProfileFraction(20)
 	}
