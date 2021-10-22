@@ -1,3 +1,8 @@
+# 代码引自：https://github.com/prometheus/prometheus  
+# 在此基础进行2次开发，添加监控设置可视化管控功能  
+
+
+
 # Prometheus
 
 [![CircleCI](https://circleci.com/gh/prometheus/prometheus/tree/master.svg?style=shield)][circleci]
