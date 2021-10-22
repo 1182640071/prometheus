@@ -86,6 +86,7 @@ var (
 		"/targets",
 		"/tsdb-status",
 		"/version",
+		"/login",
 	}
 )
 
@@ -321,9 +322,10 @@ func New(logger log.Logger, o *Options) *Handler {
 	readyf := h.testReady
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, path.Join(o.ExternalURL.Path, "/graph"), http.StatusFound)
+		http.Redirect(w, r, path.Join(o.ExternalURL.Path, "/login"), http.StatusFound)
 	})
 
+	router.Get("/login", readyf(h.login))
 	router.Get("/alerts", readyf(h.alerts))
 	router.Get("/graph", readyf(h.graph))
 	router.Get("/status", readyf(h.status))
@@ -710,6 +712,11 @@ func (h *Handler) graph(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "graph.html", nil)
 }
 
+//登录界面
+func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "login.html", nil)
+}
+
 func (h *Handler) status(w http.ResponseWriter, r *http.Request) {
 	status := struct {
 		Birth               time.Time
@@ -1054,11 +1061,17 @@ func (h *Handler) getTemplate(name string) (string, error) {
 		return nil
 	}
 
-	err := appendf("_base.html")
-	if err != nil {
-		return "", errors.Wrap(err, "error reading base template")
+	//登录界面不加载模板
+	// FIXME 此处添加登录验证，未登录请求跳转至login.html
+	//name = "login.html"
+	if name != "login.html" {
+		err := appendf("_base.html")
+		if err != nil {
+			return "", errors.Wrap(err, "error reading base template")
+		}
 	}
-	err = appendf(name)
+
+	err := appendf(name)
 	if err != nil {
 		return "", errors.Wrapf(err, "error reading page template %s", name)
 	}
