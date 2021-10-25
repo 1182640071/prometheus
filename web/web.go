@@ -90,6 +90,18 @@ var (
 	}
 )
 
+// User 用户信息
+type User  struct{
+	Username string `json:"username"`
+	Password  string `json:"password"`
+}
+
+// JsonResult 登录认真结果
+type JsonResult  struct{
+	Code int `json:"code"`
+	Msg  string `json:"msg"`
+}
+
 // withStackTrace logs the stack trace in case the request panics. The function
 // will re-raise the error which will then be handled by the net/http package.
 // It is needed because the go-kit log package doesn't manage properly the
@@ -325,7 +337,45 @@ func New(logger log.Logger, o *Options) *Handler {
 		http.Redirect(w, r, path.Join(o.ExternalURL.Path, "/login"), http.StatusFound)
 	})
 
+
+	router.Post("/userAuthentication", func(w http.ResponseWriter, r *http.Request){
+
+		defer r.Body.Close()
+		con, _ := ioutil.ReadAll(r.Body)
+		var user User
+		err := json.Unmarshal(con, &user)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		username := user.Username
+		password := user.Password
+
+		//状态码
+		code := 0
+		// 状态描述
+		des := ""
+
+		if username == "admin" && password == "Test123!@#" {
+			code = 0
+			des = "login success"
+		}else {
+			code = 1001
+			des = "username or password incorrect"
+		}
+
+		msg, _ := json.Marshal(JsonResult{Code: code, Msg: des})
+		w.Header().Set("content-type","text/json")
+
+		w.WriteHeader(200)
+		w.Write(msg)
+
+	})
+
 	router.Get("/login", readyf(h.login))
+	router.Get("/welcome", readyf(h.welcome))
+	//router.Post("/userAuthentication", readyf(h.userAuthentication))
+
 	router.Get("/alerts", readyf(h.alerts))
 	router.Get("/graph", readyf(h.graph))
 	router.Get("/status", readyf(h.status))
@@ -715,6 +765,48 @@ func (h *Handler) graph(w http.ResponseWriter, r *http.Request) {
 //登录界面
 func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "login.html", nil)
+}
+
+func (h *Handler) welcome(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "welcome.html", nil)
+}
+
+func (h *Handler) userAuthentication(w http.ResponseWriter, r *http.Request) {
+
+	//登录认证结果结构体
+	type JsonResult  struct{
+		Code int `json:"code"`
+		Msg  string `json:"msg"`
+	}
+
+	//用户信息
+	type User  struct{
+		Username string `json:"username"`
+		Password  string `json:"password"`
+	}
+
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	formData := make(map[string]interface{})
+
+	json.NewDecoder(r.Body).Decode(&formData)
+
+	for k,v := range formData{
+		fmt.Println(111111111)
+		fmt.Println(k)
+		fmt.Println(v)
+	}
+
+	//msg, _ := json.Marshal(JsonResult{Code: 0, Msg: "验证成功"})
+
+	//w.Header().Set("content-type","text/json")
+	//
+	//w.WriteHeader(200)
+	//w.Write(msg)
+
 }
 
 func (h *Handler) status(w http.ResponseWriter, r *http.Request) {
