@@ -18,6 +18,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/log/level"
+	"github.com/gorilla/sessions"
 	"io"
 	"io/ioutil"
 	stdlog "log"
@@ -37,9 +40,7 @@ import (
 	"sync/atomic"
 	template_text "text/template"
 	"time"
-
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	//"github.com/gorilla/sessions"
 	conntrack "github.com/mwitkow/go-conntrack"
 	"github.com/opentracing-contrib/go-stdlib/nethttp"
 	opentracing "github.com/opentracing/opentracing-go"
@@ -101,6 +102,8 @@ type JsonResult  struct{
 	Code int `json:"code"`
 	Msg  string `json:"msg"`
 }
+
+var Store=sessions.NewCookieStore([]byte("something-very-secret"))
 
 // withStackTrace logs the stack trace in case the request panics. The function
 // will re-raise the error which will then be handled by the net/http package.
@@ -213,6 +216,7 @@ type Handler struct {
 	now func() model.Time
 
 	ready uint32 // ready is uint32 rather than boolean to be able to use atomic functions.
+	isLogin bool
 }
 
 // ApplyConfig updates the config field of the Handler struct
@@ -333,13 +337,14 @@ func New(logger log.Logger, o *Options) *Handler {
 
 	readyf := h.testReady
 
+	fmt.Println(o.ExternalURL.Path)
+
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, path.Join(o.ExternalURL.Path, "/login"), http.StatusFound)
 	})
 
 
 	router.Post("/userAuthentication", func(w http.ResponseWriter, r *http.Request){
-
 		defer r.Body.Close()
 		con, _ := ioutil.ReadAll(r.Body)
 		var user User
@@ -356,9 +361,19 @@ func New(logger log.Logger, o *Options) *Handler {
 		// 状态描述
 		des := ""
 
+		session,_ := Store.Get(r,"get_name_session")
+
+		timestamp := time.Now().Unix()
+		fmt.Println(timestamp)
+
 		if username == "admin" && password == "Test123!@#" {
 			code = 0
 			des = "login success"
+
+			//name,ok := session.Values["name"].(string)
+			session.Values["validPeriod"] = timestamp
+			session.Save(r,w)
+
 		}else {
 			code = 1001
 			des = "username or password incorrect"
@@ -366,7 +381,6 @@ func New(logger log.Logger, o *Options) *Handler {
 
 		msg, _ := json.Marshal(JsonResult{Code: code, Msg: des})
 		w.Header().Set("content-type","text/json")
-
 		w.WriteHeader(200)
 		w.Write(msg)
 
@@ -529,11 +543,29 @@ func (h *Handler) isReady() bool {
 // Checks if server is ready, calls f if it is, returns 503 if it is not.
 func (h *Handler) testReady(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if h.isReady() {
-			f(w, r)
-		} else {
-			w.WriteHeader(http.StatusServiceUnavailable)
-			fmt.Fprintf(w, "Service Unavailable")
+		session,_ := Store.Get(r,"get_name_session")
+
+		validPeriod, ok := session.Values["validPeriod"].(int64)
+
+		nowTime := time.Now().Unix()
+
+		if ok {
+			ok = nowTime < (validPeriod + 1800)
+			if ok {
+				session.Values["validPeriod"] = validPeriod
+			}
+		}
+
+		// FIXME 在此处补全其他不需要登录认证的接口地址
+		if !ok && r.RequestURI != "/login" && r.RequestURI != "/userAuthentication" && strings.HasPrefix(r.RequestURI, "/-/")   {
+			http.Redirect(w, r, path.Join("/login"), http.StatusFound)
+		}else{
+			if h.isReady() {
+				f(w, r)
+			} else {
+				w.WriteHeader(http.StatusServiceUnavailable)
+				fmt.Fprintf(w, "Service Unavailable")
+			}
 		}
 	}
 }
@@ -768,46 +800,10 @@ func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) welcome(w http.ResponseWriter, r *http.Request) {
+
 	h.executeTemplate(w, "welcome.html", nil)
 }
 
-func (h *Handler) userAuthentication(w http.ResponseWriter, r *http.Request) {
-
-	//登录认证结果结构体
-	type JsonResult  struct{
-		Code int `json:"code"`
-		Msg  string `json:"msg"`
-	}
-
-	//用户信息
-	type User  struct{
-		Username string `json:"username"`
-		Password  string `json:"password"`
-	}
-
-	err := r.ParseForm()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	formData := make(map[string]interface{})
-
-	json.NewDecoder(r.Body).Decode(&formData)
-
-	for k,v := range formData{
-		fmt.Println(111111111)
-		fmt.Println(k)
-		fmt.Println(v)
-	}
-
-	//msg, _ := json.Marshal(JsonResult{Code: 0, Msg: "验证成功"})
-
-	//w.Header().Set("content-type","text/json")
-	//
-	//w.WriteHeader(200)
-	//w.Write(msg)
-
-}
 
 func (h *Handler) status(w http.ResponseWriter, r *http.Request) {
 	status := struct {
@@ -1153,9 +1149,6 @@ func (h *Handler) getTemplate(name string) (string, error) {
 		return nil
 	}
 
-	//登录界面不加载模板
-	// FIXME 此处添加登录验证，未登录请求跳转至login.html
-	//name = "login.html"
 	if name != "login.html" {
 		err := appendf("_base.html")
 		if err != nil {

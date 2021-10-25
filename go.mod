@@ -18,6 +18,7 @@ require (
 	github.com/golang/snappy v0.0.1
 	github.com/google/pprof v0.0.0-20190723021845-34ac40c74b70
 	github.com/gophercloud/gophercloud v0.3.0
+	github.com/gorilla/sessions v1.2.1
 	github.com/grpc-ecosystem/grpc-gateway v1.9.5
 	github.com/hashicorp/consul/api v1.1.0
 	github.com/influxdata/influxdb v1.7.7

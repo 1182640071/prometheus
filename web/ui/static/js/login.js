@@ -23,7 +23,7 @@ function login(){
             if(result.code == 0){
                 window.location.href = "/welcome";
             }else{
-                alert("信息密码错误！");
+                alert("用户名或密码错误！");
             }
         }
     })
