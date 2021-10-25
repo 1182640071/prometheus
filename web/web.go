@@ -556,7 +556,7 @@ func (h *Handler) testReady(f http.HandlerFunc) http.HandlerFunc {
 			}
 		}
 
-		// FIXME 在此处补全其他不需要登录认证的地址1
+		// FIXME 在此处补全其他不需要登录认证的地址
 		if !ok && r.RequestURI != "/login" && r.RequestURI != "/userAuthentication" && strings.HasPrefix(r.RequestURI, "/-/")   {
 			http.Redirect(w, r, path.Join("/login"), http.StatusFound)
 		}else{
