@@ -21,6 +21,8 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/gorilla/sessions"
+	"github.com/prometheus/prometheus/service/configuration"
+	"github.com/prometheus/prometheus/service/db"
 	"io"
 	"io/ioutil"
 	stdlog "log"
@@ -93,8 +95,9 @@ var (
 
 // User 用户信息
 type User  struct{
-	Username string `json:"username"`
+	Username  string `json:"username"`
 	Password  string `json:"password"`
+	Role      string `json:"role"`
 }
 
 // JsonResult 登录认真结果
@@ -337,24 +340,21 @@ func New(logger log.Logger, o *Options) *Handler {
 
 	readyf := h.testReady
 
-	fmt.Println(o.ExternalURL.Path)
-
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, path.Join(o.ExternalURL.Path, "/login"), http.StatusFound)
 	})
 
-
+	// w添加登录信息认证，并添加session管理，session存储登录时的时间戳，且当此时间戳超过30分钟为更新时，无法登录。
 	router.Post("/userAuthentication", func(w http.ResponseWriter, r *http.Request){
 		defer r.Body.Close()
 		con, _ := ioutil.ReadAll(r.Body)
-		var user User
+		var user = User {
+			Role: "",
+		}
 		err := json.Unmarshal(con, &user)
 		if err != nil {
 			fmt.Println(err)
 		}
-
-		username := user.Username
-		password := user.Password
 
 		//状态码
 		code := 0
@@ -364,13 +364,19 @@ func New(logger log.Logger, o *Options) *Handler {
 		session,_ := Store.Get(r,"get_name_session")
 
 		timestamp := time.Now().Unix()
-		fmt.Println(timestamp)
 
-		if username == "admin" && password == "Test123!@#" {
+		err = db.DB.QueryRow("select name, password, role from platform_user limit 1 ").Scan(&user.Username, &user.Password, &user.Role)
+		if err != nil{
+			fmt.Println(err)
+			code = 1001
+			des = "username or password incorrect"
+			goto over
+		}
+
+		if user.Role != "" {
 			code = 0
 			des = "login success"
 
-			//name,ok := session.Values["name"].(string)
 			session.Values["validPeriod"] = timestamp
 			session.Save(r,w)
 
@@ -379,22 +385,41 @@ func New(logger log.Logger, o *Options) *Handler {
 			des = "username or password incorrect"
 		}
 
-		msg, _ := json.Marshal(JsonResult{Code: code, Msg: des})
-		w.Header().Set("content-type","text/json")
-		w.WriteHeader(200)
-		w.Write(msg)
-
+		over:
+			msg, _ := json.Marshal(JsonResult{Code: code, Msg: des})
+			w.Header().Set("content-type","text/json")
+			w.WriteHeader(200)
+			w.Write(msg)
 	})
 
+	//登录页面
 	router.Get("/login", readyf(h.login))
+	//首页
 	router.Get("/welcome", readyf(h.welcome))
-	//router.Post("/userAuthentication", readyf(h.userAuthentication))
+	//配置页面
+	router.Get("/configuration", readyf(h.configuration))
+	//创建监控主机节点
+	router.Get("/toHost", readyf(h.toHost))
+	//创建组管理
+	router.Get("/toGroup", readyf(h.toGroup))
+	//创建consul对接信息
+	router.Get("/toConsul", readyf(h.toConsul))
+	//prometheus.yml配置信息提交
+	router.Post("/submitConfiguration", configuration.SubmitConfiguration)
+	//提交group组配置
+	router.Post("/addGroupConfiguration", configuration.AddGroupConfiguration)
+	//获取prometheus基础配置
+	router.Get("/getConfiguration", configuration.GetConfiguration)
+	//更新prometheus.yml配置文件
+	router.Get("/updatePrometheusYmlConfig", configuration.UpdatePrometheusYmlConfig)
+
 
 	router.Get("/alerts", readyf(h.alerts))
 	router.Get("/graph", readyf(h.graph))
 	router.Get("/status", readyf(h.status))
 	router.Get("/flags", readyf(h.flags))
 	router.Get("/config", readyf(h.serveConfig))
+	//router.Get("/baseconfig", readyf(h.serveConfig))
 	router.Get("/rules", readyf(h.rules))
 	router.Get("/targets", readyf(h.targets))
 	router.Get("/version", readyf(h.version))
@@ -557,7 +582,7 @@ func (h *Handler) testReady(f http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// FIXME 在此处补全其他不需要登录认证的地址
-		if !ok && r.RequestURI != "/login" && r.RequestURI != "/userAuthentication" && strings.HasPrefix(r.RequestURI, "/-/")   {
+		if !ok && r.RequestURI != "/login" && r.RequestURI != "/userAuthentication" && r.RequestURI != "/-/reload"{
 			http.Redirect(w, r, path.Join("/login"), http.StatusFound)
 		}else{
 			if h.isReady() {
@@ -799,9 +824,27 @@ func (h *Handler) login(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "login.html", nil)
 }
 
-func (h *Handler) welcome(w http.ResponseWriter, r *http.Request) {
+//登录界面
+func (h *Handler) toHost(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "configuration/set-host.html", nil)
+}
 
+//登录界面
+func (h *Handler) toGroup(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "configuration/set-group.html", nil)
+}
+
+//登录界面
+func (h *Handler) toConsul(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "configuration/set-consul.html", nil)
+}
+
+func (h *Handler) welcome(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "welcome.html", nil)
+}
+
+func (h *Handler) configuration(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "configuration/prometheus.html", nil)
 }
 
 
@@ -1149,7 +1192,7 @@ func (h *Handler) getTemplate(name string) (string, error) {
 		return nil
 	}
 
-	if name != "login.html" {
+	if name != "login.html" && name != "configuration/set-consul.html" && name != "configuration/set-group.html" && name != "configuration/set-host.html" {
 		err := appendf("_base.html")
 		if err != nil {
 			return "", errors.Wrap(err, "error reading base template")

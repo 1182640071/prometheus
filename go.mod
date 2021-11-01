@@ -6,6 +6,7 @@ require (
 	contrib.go.opencensus.io/exporter/ocagent v0.6.0 // indirect
 	github.com/Azure/azure-sdk-for-go v23.2.0+incompatible
 	github.com/Azure/go-autorest v11.2.8+incompatible
+	github.com/Unknwon/goconfig v0.0.0-20200908083735-df7de6a44db8
 	github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4
 	github.com/aws/aws-sdk-go v1.23.12
 	github.com/cespare/xxhash v1.1.0
@@ -14,6 +15,7 @@ require (
 	github.com/go-kit/kit v0.9.0
 	github.com/go-logfmt/logfmt v0.4.0
 	github.com/go-openapi/strfmt v0.19.2
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gogo/protobuf v1.2.2-0.20190730201129-28a6bbf47e48
 	github.com/golang/snappy v0.0.1
 	github.com/google/pprof v0.0.0-20190723021845-34ac40c74b70

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prometheus</title>
+  <link rel="shortcut icon" href="{{ pathPrefix }}/static/img/favicon.ico?v={{ buildVersion }}">
+  <link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/configuration/set-group.css?v={{ buildVersion }}">
+
+  <script src="{{ pathPrefix }}/static/js/login.js?v={{ buildVersion }}"></script>
+  <script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
+  <script src="{{ pathPrefix }}/static/js/configuration/set-group.js"></script>
+</head>
+<body>
+  <div style="margin-top: 20px">
+    <div class="group-label-name">
+      <input class="group-input-label" disabled="disabled" value="组名:">
+      <input class="group-input-input" id="groupName" type="text" placeholder="   设置组名称....">
+    </div>
+
+    <div class="group-label-name">
+      <input class="group-input-label" disabled="disabled" value="监控时间:">
+      <input class="group-input-input" id="groupInterval" type="text" placeholder="   设置数据采集时间....">
+    </div>
+
+    <div class="group-label-name">
+      <input class="group-input-label" disabled="disabled" value="uri:">
+      <input class="group-input-input" id="groupUri" type="text" placeholder="   设置uri，默认为/metrics....">
+    </div>
+  </div>
+
+  <div class="select-div" style="float: left">
+    <div>
+      <select id="honor_labels">
+        <option selected style="text-align: center" value="true">请选择honor_labels属性(默认true)</option>
+        <option style="text-align: center" value="true">true</option>
+        <option style="text-align: center" value="false">false</option>
+      </select>
+    </div>
+
+    <div>
+      <select id="requestType">
+        <option selected style="text-align: center" value="http">请选择监控方式(默认http)</option>
+        <option style="text-align: center" value="http">http</option>
+        <option style="text-align: center" value="https">https</option>
+      </select>
+    </div>
+
+    <div>
+      <select id="crtCheck">
+        <option selected style="text-align: center" value="true">是否跳过证书验证(默认是)</option>
+        <option style="text-align: center" value="true">是</option>
+        <option style="text-align: center" value="false">否</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div style="float: left; margin-top: 30px; margin-left: 80px">
+    <input disabled="disabled" value="规则:" style="float: left; width: 30px; height: 120px">
+    <textarea id="groupMatch" style="float: left; height: 120px; width: 650px; border: 1px solid grey; outline: none;"
+              placeholder='   设置匹配规则....(默认为空) 多个规则用,号隔开
+            例如:
+                {job=~"kubernetes-service-endpoints"},{__name__=~"rtpproxy_.*"}'></textarea>
+  </div>
+<!--  <div style="clear: both; margin-left: 50px; width: 250px;">-->
+  <div>
+    <button style="border-radius: 2px;" type="submit" onclick="submitGroup()">提交</button>
+  </div>
+
+</body>
+</html>

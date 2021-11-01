@@ -19,6 +19,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"github.com/prometheus/prometheus/service/baseconfig"
 	"net"
 	"net/http"
 	_ "net/http/pprof" // Comment this line to disable pprof endpoint.
@@ -55,6 +56,7 @@ import (
 	"github.com/prometheus/prometheus/promql"
 	"github.com/prometheus/prometheus/rules"
 	"github.com/prometheus/prometheus/scrape"
+	"github.com/prometheus/prometheus/service/db"
 	"github.com/prometheus/prometheus/storage"
 	"github.com/prometheus/prometheus/storage/remote"
 	"github.com/prometheus/prometheus/storage/tsdb"
@@ -75,6 +77,7 @@ var (
 	defaultRetentionString   = "15d"
 	defaultRetentionDuration model.Duration
 )
+
 
 func init() {
 	prometheus.MustRegister(version.NewCollector("prometheus"))
@@ -106,6 +109,7 @@ func main() {
 
 	cfg := struct {
 		configFile string
+		basicFile string
 
 		localStoragePath    string
 		notifier            notifier.Options
@@ -145,7 +149,10 @@ func main() {
 	a.HelpFlag.Short('h')
 
 	a.Flag("config.file", "Prometheus configuration file path.").
-		Default("/tmp/prometheus.yml").StringVar(&cfg.configFile)
+		Default("/Users/wangminglang/Downloads/prometheus.yml").StringVar(&cfg.configFile)
+
+	a.Flag("basic.config.file", "basic configuration file path.").
+		Default("/Users/wangminglang/Downloads/basic.yml").StringVar(&cfg.basicFile)
 
 	a.Flag("web.listen-address", "Address to listen on for UI, API, and telemetry.").
 		Default("0.0.0.0:9090").StringVar(&cfg.web.ListenAddress)
@@ -267,6 +274,13 @@ func main() {
 	}
 
 	logger := promlog.New(&cfg.promlogConfig)
+
+	//初始化配置参数
+	baseconfig.InitBasicConfig(cfg.basicFile, logger)
+	baseconfig.BasicConfigs.PrometheusYmlConfigPath = cfg.configFile
+
+	// 初始化数据库链接
+	db.InitDB(logger)
 
 	cfg.web.ExternalURL, err = computeExternalURL(cfg.prometheusURL, cfg.web.ListenAddress)
 	if err != nil {
@@ -743,6 +757,7 @@ func main() {
 		os.Exit(1)
 	}
 	level.Info(logger).Log("msg", "See you next time!")
+
 }
 
 func reloadConfig(filename string, logger log.Logger, rls ...func(*config.Config) error) (err error) {

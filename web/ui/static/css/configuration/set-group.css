@@ -1,0 +1,59 @@
+pre {
+    white-space: pre-wrap; /*css-3*/
+    white-space: -moz-pre-wrap; /*Mozilla,since1999*/
+    white-space: -o-pre-wrap; /*Opera7*/
+    word-wrap: break-word; /*InternetExplorer5.5+*/
+}
+
+.group-input-input {
+    border: 0;
+    border-bottom: 1px solid lightgrey;
+    outline: none;
+}
+
+.group-input-label {
+    width: 60px;
+    text-align: center;
+}
+
+.group-label-name {
+    float: left;
+    margin-left: 50px;
+}
+
+input {
+    height: 14px;
+}
+
+.select-div {
+    margin-top: 20px;
+    clear: both;
+}
+
+select {
+    width: 250px;
+    margin-top: 20px;
+    margin-left: 50px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    color: dimgrey;
+    outline: none;
+    height: 22px;
+    background-color: whitesmoke;
+}
+
+input::-webkit-input-placeholder {
+    /* placeholder颜色  */
+    color: #aab2bd;
+    /* placeholder字体大小  */
+    font-size: 12px;
+    /* placeholder位置  */
+    text-align: left;
+}
+
+button {
+    /*width:  250px;*/
+    border: 1px solid lightgrey;
+    background-color: whitesmoke;
+    color: grey;
+}

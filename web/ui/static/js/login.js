@@ -7,6 +7,8 @@ function login(){
         return;
     }
 
+    password = $.md5(password);
+
     jQuery.ajax({
         type: "POST",
         url: "userAuthentication",

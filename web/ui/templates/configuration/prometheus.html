@@ -1,0 +1,106 @@
+{{define "head"}}
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/vendor/rickshaw/rickshaw.min.css?v={{ buildVersion }}">
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/vendor/eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.css?v={{ buildVersion }}">
+
+<script src="{{ pathPrefix }}/static/vendor/rickshaw/vendor/d3.v3.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/rickshaw/vendor/d3.layout.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/rickshaw/rickshaw.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/moment/moment.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/moment/moment-timezone-with-data.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/bootstrap3-typeahead/bootstrap3-typeahead.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/fuzzy/fuzzy.js?v={{ buildVersion }}"></script>
+
+<script src="{{ pathPrefix }}/static/vendor/mustache/mustache.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/js/jquery.selection.js?v={{ buildVersion }}"></script>
+<!-- <script src="{{ pathPrefix }}/static/vendor/js/jquery.hotkeys.js?v={{ buildVersion }}"></script> -->
+
+<script src="{{ pathPrefix }}/static/js/graph/index.js?v={{ buildVersion }}"></script>
+
+<script id="graph_template" type="text/x-handlebars-template"></script>
+<script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
+<script src="{{ pathPrefix }}/static/js/configuration/prometheus-config.js"></script>
+
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/graph.css?v={{ buildVersion }}">
+{{end}}
+
+{{define "content"}}
+<div style="position: absolute; height: 80%; width: 100%;" >
+  <h1 style="margin-left: 2%">Configuration</h1>
+  <div style="position: absolute; left: 1%; top: 9%; height: 33%; width: 96% ; border: 1px solid lightgrey">
+    <div class="config-prometheus" style="position: absolute; left: 1%; top: 6%; height: 100%; width: 96%">
+
+      <div class="label-name" style="position: absolute; top: 7%;">
+        <input class="input-label" disabled="disabled" value="配置名称:">
+        <input class="input-input" id="prometheusName" type="text" placeholder="   设置配置名称....">
+      </div>
+
+      <div class="label-name" style="position: absolute; top: 35%;">
+        <input class="input-label" disabled="disabled" value="监控时间:">
+        <input class="input-input" id="prometheusInterval" type="text" placeholder="   监控时间(scrape_interval)间隔....">
+      </div>
+
+      <div class="label-name" style="position: absolute; top: 35%; left: 30%">
+        <input class="input-label" disabled="disabled" value="匹配时间:">
+
+        <input class="input-input" id="prometheusRInterval" type="text" placeholder="   告警判断时间(evaluation_interval)间隔....">
+      </div>
+
+      <div class="label-name" style="position: absolute; top: 35%; left: 61%">
+        <input class="input-label" disabled="disabled" value="告警地址:">
+        <input class="input-input" id="prometheusAUrl" type="text" placeholder="   设置告警模块url....">
+      </div>
+
+
+      <div class="label-name" style="position: absolute; top: 63%;">
+        <input class="input-label" disabled="disabled" value="告警文件:">
+        <input class="input-input" id="prometheusRPath" type="text" placeholder="   设置rule文件路径....">
+      </div>
+
+      <div class="label-name" style="position: absolute; top: 63%; left: 30%">
+        <input class="input-label" disabled="disabled" value="分组文件:">
+        <input class="input-input" id="prometheusJPath" type="text" placeholder="   设置Job文件路径....">
+      </div>
+
+      <div class="label-name" style="position: absolute; top: 63%; left: 61%">
+        <input class="input-label" disabled="disabled" value="超时时间:">
+        <input class="input-input" id="prometheusTimeout" type="text" placeholder="   超时(scrape_timeout)时间....">
+      </div>
+
+      <div class="label-name" style="position: absolute; margin-left: 80%; top: 100%;">
+        <button class="button-config" type="submit" onclick="showPConfig()">预览</button>
+        <button class="button-config" type="submit" onclick="submitConfiguration()">提交</button>
+        <button class="button-config" type="submit" onclick="updatePConfig()">更新文件</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="changeGroup" style="text-align: center; margin-left: 1%;  position: absolute; top: 48%; height: 50%; width: 98%; z-index: 2">
+    <ul class="label-add" style="height: 50px;">
+      <li id="group" class="li-left">
+        <a href="javascript:changeNode('group')" >组设置</a>
+      </li>
+      <li id="consul" class="li-mid">
+        <a href="javascript:changeNode('consul')" >Consul</a>
+      </li>
+      <li id="host" class="li-right">
+        <a href="javascript:changeNode('host')">主机设置</a>
+      </li>
+    </ul>
+
+    <div id="iframe_config" style="margin: 0; border: 1px solid lightgrey; position: absolute; top: 44px; width: 98%; height: 100%; z-index: -1;">
+      <iframe id="change_iframe" marginwidth=0 marginheight=0 width=100% height=100% src="toGroup" frameborder=0></iframe>
+    </div>
+
+  </div>
+
+
+<!--  <hr style="margin-top: 0; position: absolute; top: 53%; border: 0;  border-bottom: 2px solid lightseagreen; height: 1px; width: 98%">-->
+
+</div>
+
+
+<div id="backshow" class="back_color" style="width: 100% ; height: 100%;">
+</div>
+{{end}}
