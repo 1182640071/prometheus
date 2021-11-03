@@ -1,8 +1,28 @@
 # 代码引自：https://github.com/prometheus/prometheus  
 # 在此基础进行2次开发，添加监控设置可视化管控功能，不定期更新新功能  
 
+# 部署方式：
+    $ mkdir -p $GOPATH/src/github.com/prometheus
+    $ cd $GOPATH/src/github.com/prometheus
+    $ git clone https://github.com/prometheus/prometheus.git
+    $ cd prometheus
+    $ make build
+    $ ./prometheus --config.file=/${your_path}/prometheus.yml --basic.config.file=/${your_path}/basic.conf 
+
+prometheus.yml可以创建一个最简单的，后续由prometheus监管平台来管理
+basic.conf如下：
+> basic.conf 内容:  
+[mysql]  
+username=root           //mysql数据库用户名  
+password=Test123!@#     //mysql用户密码  
+ip=10.36.3.123          //mysql地址  
+port=3306               //mysql端口  
+dbname=prometheus       //mysql库  
+maxIdleConns=10  
+maxOpenConns=3  
 
 
+# 以下内容为原版prometheus文档
 # Prometheus
 
 [![CircleCI](https://circleci.com/gh/prometheus/prometheus/tree/master.svg?style=shield)][circleci]

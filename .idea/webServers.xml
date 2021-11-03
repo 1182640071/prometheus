@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="72b8a275-d9d6-41b0-b80c-f9a69d5848c0" name="123" url="http://10.36.3.123">
+        <fileTransfer rootFolder="/home/wml/src" accessType="SFTP" host="10.36.3.123" port="22" sshConfigId="bb17c9a8-9176-49b1-9625-3e75d46ac77d" sshConfig="root@10.36.3.123:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
