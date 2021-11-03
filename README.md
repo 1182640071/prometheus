@@ -4,7 +4,7 @@
 # 部署方式：
     $ mkdir -p $GOPATH/src/github.com/prometheus
     $ cd $GOPATH/src/github.com/prometheus
-    $ git clone https://github.com/prometheus/prometheus.git
+    $ git clone https://github.com/1182640071/prometheus.git
     $ cd prometheus
     $ make build
     $ ./prometheus --config.file=/${your_path}/prometheus.yml --basic.config.file=/${your_path}/basic.conf 
