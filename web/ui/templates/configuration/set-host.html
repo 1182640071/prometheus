@@ -4,10 +4,61 @@
   <meta charset="UTF-8">
   <title>Prometheus</title>
   <link rel="shortcut icon" href="{{ pathPrefix }}/static/img/favicon.ico?v={{ buildVersion }}">
+  <link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/configuration/set-group.css?v={{ buildVersion }}">
+
   <script src="{{ pathPrefix }}/static/js/login.js?v={{ buildVersion }}"></script>
   <script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
 </head>
 <body>
-  host
+<div style="margin-top: 20px">
+  <div>
+    <select id="groups">
+      <option selected style="text-align: center" value="">请选择所属组</option>
+<!--      <option style="text-align: center" value="tt12">tt12</option>-->
+<!--      <option style="text-align: center" value="fgscs">fgscs</option>-->
+    </select>
+  </div>
+
+  <div class="group-label-name" style="margin-top: 20px">
+    <input class="group-input-label" disabled="disabled" value="主机名:">
+    <input class="group-input-input" id="host-name" type="text" placeholder="   设置主机名称....">
+  </div>
+
+  <div class="group-label-name" style="margin-top: 20px">
+    <input class="group-input-label" disabled="disabled" value="IP:">
+    <input class="group-input-input" id="host-ip" type="text" placeholder="   设置target的IP....">
+  </div>
+
+  <div class="group-label-name" style="margin-top: 20px">
+    <input class="group-input-label" disabled="disabled" value="PORT:">
+    <input class="group-input-input" id="host-port" type="text" placeholder="   设置target的PORT....">
+  </div>
+
+  <div class="group-label-name" style="margin-top: 20px">
+    <button style="border-radius: 2px;" type="submit" onclick="submitHosts()">提交</button>
+  </div>
+</div>
+
+
+<div style="clear: both">
+  <div style="float: left">
+    <div class="group-label-name" style="margin-top: 20px">
+      <input class="group-input-label" disabled="disabled" value="label:">
+      <input class="group-input-input" id="label-key" type="text" placeholder="   设置key....">
+      <input class="group-input-input" id="label-value" type="text" placeholder="   设置value....">
+      <button style="border-radius: 20px; width: 17px; padding: 0" type="submit" onclick="addLabel()">+</button>
+    </div>
+
+    <div id="extra_label" style="clear: both; margin-left: 40px">
+      <div id="labels" style="display: none">
+      </div>
+    </div>
+  </div>
+
+</div>
+
 </body>
+
+<script src="{{ pathPrefix }}/static/js/configuration/set-host.js"></script>
+
 </html>

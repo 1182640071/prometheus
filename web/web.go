@@ -412,6 +412,10 @@ func New(logger log.Logger, o *Options) *Handler {
 	router.Get("/getConfiguration", configuration.GetConfiguration)
 	//更新prometheus.yml配置文件
 	router.Get("/updatePrometheusYmlConfig", configuration.UpdatePrometheusYmlConfig)
+	//获取所有组信息
+	router.Get("/getGroups", configuration.GetGroups)
+	//获取所有组信息
+	router.Post("/addHostConfig", configuration.AddHostConfig)
 
 
 	router.Get("/alerts", readyf(h.alerts))

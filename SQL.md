@@ -10,8 +10,9 @@ password varchar(50) not null,
 role varchar(50) not null,  
 PRIMARY KEY ( name ) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;  
 
->初始化数据，创建一个管理员用户：   
+>初始化数据，创建一个管理员用户admin 密码Test123!@#    
 insert into platform_user values ('admin', '1de52961c3a824453fd18895eba7a9b0', 'admin');
+
 
 创建prometheus.yml配置表
 >create table if not exists configuration (  
@@ -37,5 +38,18 @@ PRIMARY KEY ( name ) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 `honor_labels` varchar(10) NOT NULL,  
 PRIMARY KEY (`id`),  
 UNIQUE KEY `name` (`name`)  
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8  
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8  
 
+
+创建主机管理(Target)表
+>CREATE TABLE `host_config` (  
+`id` varchar(50) NOT NULL,  
+`name` varchar(50) NOT NULL,  
+`ip` varchar(50) NOT NULL,  
+`port` varchar(6) NOT NULL,  
+`group_id` int(11) NOT NULL,  
+`label` varchar(500),  
+`status` varchar(5) NOT NULL,  
+PRIMARY KEY (`id`),  
+UNIQUE KEY `target` (`ip`, `port`, `group_id`)  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

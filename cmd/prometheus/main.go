@@ -141,7 +141,6 @@ func main() {
 		promlogConfig: promlog.Config{},
 	}
 
-	fmt.Println("wml " + os.Args[0])
 	a := kingpin.New(filepath.Base(os.Args[0]), "The Prometheus monitoring server")
 
 	a.Version(version.Print("prometheus"))
@@ -152,7 +151,7 @@ func main() {
 		Default("/Users/wangminglang/Downloads/prometheus.yml").StringVar(&cfg.configFile)
 
 	a.Flag("basic.config.file", "basic configuration file path.").
-		Default("/Users/wangminglang/Downloads/basic.yml").StringVar(&cfg.basicFile)
+		Default("/Users/wangminglang/Downloads/basic.conf").StringVar(&cfg.basicFile)
 
 	a.Flag("web.listen-address", "Address to listen on for UI, API, and telemetry.").
 		Default("0.0.0.0:9090").StringVar(&cfg.web.ListenAddress)
