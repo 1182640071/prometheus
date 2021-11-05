@@ -1,0 +1,84 @@
+{{define "head"}}
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/host_management/host.css?v={{ buildVersion }}">
+<script id="graph_template" type="text/x-handlebars-template"></script>
+<script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
+
+{{end}}
+
+{{define "content"}}
+    <div class="select-label">
+
+        <div class="host-select">
+            <input class="host-label-first" disabled="disabled" value="属组:">
+            <select id="groups">
+                <option selected style="text-align: center" value="">请选择所属组</option>
+                    <option style="text-align: center" value="tt12">tt12</option>
+                    <option style="text-align: center" value="fgscs">fgscs</option>
+            </select>
+        </div>
+
+        <div class="host-select">
+            <input class="host-label" disabled="disabled" value="主机名:">
+            <input class="host-input" id="host-name" type="text" placeholder="   设置关键词....">
+        </div>
+
+        <div class="host-select">
+            <input class="host-label" disabled="disabled" value="IP:">
+            <input class="host-input" id="host-ip" type="text" placeholder="   设置target的IP....">
+        </div>
+
+        <div class="host-select">
+            <input class="host-label" disabled="disabled" value="PORT:">
+            <input class="host-input" id="host-l" type="text" placeholder="   设置target的port....">
+        </div>
+
+        <div class="host-select">
+            <input class="host-label" disabled="disabled" value="LABEL:">
+            <input class="host-input" id="host-d" type="text" placeholder="   设置label的关键词....">
+        </div>
+
+        <div class="host-select">
+            <button type="submit" onclick="selectHost()">查询</button>
+        </div>
+    </div>
+
+    <div style="width: 90%; margin-left: 5%">
+        <table style="width: 100%; border-collapse:collapse; margin-top: 30px">
+            <thead>
+                <tr class="title-label">
+                    <td class="host-title" style="display: none"></td>
+                    <td class="host-title">NAME</td>
+                    <td class="host-title">IP</td>
+                    <td class="host-title">PORT</td>
+                    <td class="host-title">GROUP</td>
+                    <td class="host-title">LABELS</td>
+                    <td class="host-title">OPERATE</td>
+                </tr>
+            </thead>
+            <tbody id="hosts">
+                <tr>
+                    <td class="host-info" style="display: none">123412341234</td>
+                    <td class="host-info">VB_LOCAL_SC_RTER_2_API_01_10.10.10.10</td>
+                    <td class="host-info">10.10.10.10</td>
+                    <td class="host-info">8080</td>
+                    <td class="host-info">ddcsp</td>
+                    <td class="host-info"></td>
+                    <td><a href="#" onclick="changeStatus('0')">启动</a> | <a href="#" onclick="deleteTarget('id')">删除</a></td>
+                </tr>
+
+                <tr>
+                    <td style="display: none">123412341234</td>
+                    <td class="host-info">VB_LOCAL_SC_RTER_2_API_01_10.10.10.10</td>
+                    <td class="host-info">10.10.10.10</td>
+                    <td class="host-info">8080</td>
+                    <td class="host-info">ddcsp</td>
+                    <td class="host-info">{"test": "11123", "aaa": "3423432"}</td>
+                    <td><a href="#" onclick="changeStatus('0')">启动</a> | <a href="#" onclick="deleteTarget('id')">删除</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+{{end}}
+
+<script src="{{ pathPrefix }}/static/js/host_management/host.js"></script>

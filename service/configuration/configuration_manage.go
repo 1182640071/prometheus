@@ -140,10 +140,10 @@ func SubmitConfiguration(w http.ResponseWriter, r *http.Request) {
 	}
 
 	over:
-	msg, _ := json.Marshal(jsonResult)
-	w.Header().Set("content-type","text/json")
-	w.WriteHeader(200)
-	w.Write(msg)
+		msg, _ := json.Marshal(jsonResult)
+		w.Header().Set("content-type","text/json")
+		w.WriteHeader(200)
+		w.Write(msg)
 
 }
 
@@ -293,6 +293,13 @@ func GetGroups(w http.ResponseWriter, r *http.Request){
 
 }
 
+
+// ToHostManagement 获取所有group信息
+func ToHostManagement(w http.ResponseWriter, r *http.Request){
+
+}
+
+
 // AddHostConfig 提交的Host配置入库
 func AddHostConfig(w http.ResponseWriter, r *http.Request) {
 
@@ -347,20 +354,22 @@ func AddHostConfig(w http.ResponseWriter, r *http.Request) {
 				tx.Rollback()
 				goto over
 			}
+			groupName, err := SelectGroupName(hostConfiguration.GroupID)
+			if err != nil {
+				tx.Rollback()
+				fmt.Println(err)
+				jsonResult.Code = 1000
+				jsonResult.Msg = "group name select error"
+				goto over
+			}
 			tx.Commit()
 
-			RewriteJobFile(hostConfiguration.GroupID)
-
-			//TODO 添加file文件内容修改
-			//err = createJobFile(groupConfiguration.Name)
-			//if err != nil {
-			//	fmt.Println(err)
-			//	jsonResult.Code = 1000
-			//	jsonResult.Msg = "Job对应的存储节点文件创建失败"
-			//	tx.Rollback()
-			//}else{
-			//	tx.Commit()
-			//}
+			err = RewriteJobFile(hostConfiguration.GroupID, groupName)
+			if err != nil{
+				fmt.Println(err)
+				jsonResult.Code = 1000
+				jsonResult.Msg = "Job file rewrite fail"
+			}
 		}
 	}
 
@@ -457,23 +466,25 @@ func WriteToFile(fileName string, content string) error {
 }
 
 // RewriteJobFile 重写Job文件，更新监控target信息
-func RewriteJobFile(groupID string) error{
-	sql := "select h.id, h.name, h.ip, h.port, h.group_id, h.label, h.status, g.name from host_config h, group_config g where h.group_id = g.id and h.status = '0' and g.id = " + groupID
+func RewriteJobFile(groupID string, groupName string) error{
+	sql := "select h.id, h.name, h.ip, h.port, h.group_id, h.label, h.status, g.name from host_config h, group_config g where h.group_id = g.id and g.id = " + groupID
 	hostConfigurations, err := SelectHostConfigurations(sql)
 	if err != nil{
+		fmt.Println("SelectHostConfigurations 查询失败")
 		return err
 	}
 
 	var contents []string
-
 	for _, hostConfiguration := range hostConfigurations{
+		if hostConfiguration.Status != "0"{
+			continue
+		}
 		content := "{\"labels\":" + hostConfiguration.Label + "," + "\"targets\":[\"" + hostConfiguration.Ip + ":" + hostConfiguration.Port + "\"]}"
 		contents = append(contents, content)
 	}
 
 	contentWriteToFile := "[" + strings.Join(contents, ",") + "]"
-
-	groupName := hostConfigurations[0].GroupName
+	//groupName := hostConfigurations[0].GroupName
 
 	configuration, err := selectPrometheusConfiguration()
 	if err != nil {
@@ -483,7 +494,6 @@ func RewriteJobFile(groupID string) error{
 	filename := path.Join(jobPath, groupName + ".yml")
 
 	err = WriteToFile(filename, contentWriteToFile)
-
 	return err
 }
 
@@ -620,5 +630,15 @@ func deletePrometheusConfiguration() error{
 		}
 		tx.Commit()
 	}
-	return nil
+	return err
+}
+
+
+// SelectGroupName 获取group配置
+func SelectGroupName(groupID string) (string, error){
+
+	var groupName string
+
+	err := db.DB.QueryRow("select name from group_config where id=" + groupID + " limit 1").Scan(&groupName)
+	return groupName, err
 }

@@ -21,6 +21,8 @@ dbname=prometheus       //mysql库
 maxIdleConns=10  
 maxOpenConns=3  
 
+sql语句见：SQL.md
+
 
 # 以下内容为原版prometheus文档
 # Prometheus

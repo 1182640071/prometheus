@@ -46,11 +46,11 @@
                         {{if $consoles}}
                         <li class="nav-item"><a class="nav-link" href="{{$consoles}}">Consoles</a></li>
                         {{ end }}
+                        <li class="nav-item"><a class="nav-link" href="{{ pathPrefix }}/alerts">Alerts</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ pathPrefix }}/graph">Graph</a></li>
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Status <span class="caret"></span></a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{{ pathPrefix }}/alerts">Alerts</a>
                                 <a class="dropdown-item" href="{{ pathPrefix }}/status">Runtime &amp; Build Information</a>
                                 <a class="dropdown-item" href="{{ pathPrefix }}/flags">Command-Line Flags</a>
                                 <a class="dropdown-item" href="{{ pathPrefix }}/config">Configuration</a>
@@ -63,9 +63,9 @@
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{{ pathPrefix }}/configuration">监控配置</a>
-                                <a class="dropdown-item" href="{{ pathPrefix }}/hostConfig">主机配置</a>
-                                <a class="dropdown-item" href="{{ pathPrefix }}/groupConfig">组管理</a>
+                                <a class="dropdown-item" href="{{ pathPrefix }}/configuration">General Management</a>
+                                <a class="dropdown-item" href="{{ pathPrefix }}/hostManagement">Host Management</a>
+                                <a class="dropdown-item" href="{{ pathPrefix }}/jobManagement">Job Management</a>
                             </div>
                         </li>
                     </ul>

@@ -1,0 +1,41 @@
+{{define "head"}}
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/vendor/rickshaw/rickshaw.min.css?v={{ buildVersion }}">
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/vendor/eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.css?v={{ buildVersion }}">
+
+<script src="{{ pathPrefix }}/static/vendor/rickshaw/vendor/d3.v3.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/rickshaw/vendor/d3.layout.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/rickshaw/rickshaw.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/moment/moment.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/moment/moment-timezone-with-data.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/bootstrap3-typeahead/bootstrap3-typeahead.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/fuzzy/fuzzy.js?v={{ buildVersion }}"></script>
+
+<script src="{{ pathPrefix }}/static/vendor/mustache/mustache.min.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/vendor/js/jquery.selection.js?v={{ buildVersion }}"></script>
+<!-- <script src="{{ pathPrefix }}/static/vendor/js/jquery.hotkeys.js?v={{ buildVersion }}"></script> -->
+
+<script src="{{ pathPrefix }}/static/js/graph/index.js?v={{ buildVersion }}"></script>
+
+<script id="graph_template" type="text/x-handlebars-template"></script>
+<script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
+{{end}}
+
+{{define "content"}}
+<div>
+    <div class="group-label-name" style="margin-top: 20px">
+        <input class="group-input-label" disabled="disabled" value="主机名:">
+        <input class="group-input-input" id="host-name" type="text" placeholder="   设置组名称....">
+    </div>
+
+    <div class="group-label-name" style="margin-top: 20px">
+        <input class="group-input-label" disabled="disabled" value="IP:">
+        <input class="group-input-input" id="host-ip" type="text" placeholder="   设置target的IP....">
+    </div>
+
+    <div class="group-label-name" style="margin-top: 20px">
+        <input class="group-input-label" disabled="disabled" value="IP:">
+        <input class="group-input-input" id="host-l" type="text" placeholder="   设置target的IP....">
+    </div>
+</div>
+{{end}}

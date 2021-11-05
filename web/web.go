@@ -23,6 +23,7 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/prometheus/prometheus/service/configuration"
 	"github.com/prometheus/prometheus/service/db"
+	"github.com/prometheus/prometheus/service/hosts"
 	"io"
 	"io/ioutil"
 	stdlog "log"
@@ -356,7 +357,7 @@ func New(logger log.Logger, o *Options) *Handler {
 			fmt.Println(err)
 		}
 
-		//状态码
+		// 状态码
 		code := 0
 		// 状态描述
 		des := ""
@@ -414,8 +415,17 @@ func New(logger log.Logger, o *Options) *Handler {
 	router.Get("/updatePrometheusYmlConfig", configuration.UpdatePrometheusYmlConfig)
 	//获取所有组信息
 	router.Get("/getGroups", configuration.GetGroups)
-	//获取所有组信息
+	//创建监控节点信息
 	router.Post("/addHostConfig", configuration.AddHostConfig)
+
+	// Host Management
+	router.Get("/hostManagement", readyf(h.toHostManagement))
+	// Job Management
+	router.Get("/jobManagement", readyf(h.toJobManagement))
+
+	// 查询所有主机信息
+	router.Get("/searchHosts", hosts.SearchTargets)
+	router.Post("/updateTargetStatus", hosts.UpdateTargetsStatus)
 
 
 	router.Get("/alerts", readyf(h.alerts))
@@ -833,20 +843,32 @@ func (h *Handler) toHost(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "configuration/set-host.html", nil)
 }
 
-//登录界面
+//主机节点管理
+func (h *Handler) toHostManagement(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "host_management/host.html", nil)
+}
+
+//Job管理
+func (h *Handler) toJobManagement(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "job_management/job.html", nil)
+}
+
+//创建组(Job)
 func (h *Handler) toGroup(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "configuration/set-group.html", nil)
 }
 
-//登录界面
+//prometheus对接consul配置
 func (h *Handler) toConsul(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "configuration/set-consul.html", nil)
 }
 
+//首页
 func (h *Handler) welcome(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "welcome.html", nil)
 }
 
+//configuration配置页面
 func (h *Handler) configuration(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "configuration/prometheus.html", nil)
 }

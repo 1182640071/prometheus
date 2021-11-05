@@ -1,7 +1,12 @@
 function addLabel() {
 
-    let key = $("#label-key").val();
-    let value = $("#label-value").val();
+    let key = $("#label-key").val().trim();
+    let value = $("#label-value").val().trim();
+
+    if(key == "" || value == ""){
+        alert("label的key和value不能为空");
+        return;
+    }
 
     let label = "<div id='" + key + "'>";
     label = label + '<input id="' + key + '-key" type="button" style="float: left; margin-left: 10px; height: 25px; margin-top: 10px; border: 1px solid lightgrey; border-radius: 0" disabled="disabled" value="' + key + '">'
@@ -65,9 +70,7 @@ function submitHosts(){
         let value = $("#" + key + "-value").val();
         extraLabels[key] = value;
     }
-    extraLabels["name"] = name + ip + ":" + port;
-    alert(JSON.stringify(extraLabels).toString());
-
+    extraLabels["name"] = name + "_" + ip;
 
     jQuery.ajax({
         type: "POST",
@@ -81,7 +84,11 @@ function submitHosts(){
             return false;
         },
         success: function (result) {
-            alert(result.code);
+            if(result.code == 0){
+                alert("添加成功");
+            }else{
+                alert(result.msg);
+            }
         }
     })
 

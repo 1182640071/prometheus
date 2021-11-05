@@ -54,24 +54,29 @@ pre {
 
 .input-input {
     font-size: 12px;
-    height: 90%;
+    /*height: 90%;*/
+    height: 30px;
     width: 60%;
     border: 0;
-    border-bottom: 2px solid #005cbf;
+    /*border-bottom: 2px solid #005cbf;*/
+    border-bottom: 1px solid lightgrey;
     outline: none;
-    /*color: #aab2bd;*/
     color: #222222;
-    background-color: #D2E9FF;
+    background-color: whitesmoke;
     padding-left: 10px;
     /*text-align: center;*/
 }
 
 .input-label {
+    margin-bottom: 0;
     font-size: 12px;
     padding: 5px;
-    height: 90%;
+    /*height: 90%;*/
+    height: 30px;
     width: 18%;
     text-align: center;
+    /*border: 1px solid #005cbf;*/
+    /*background-color: #005cbf;*/
     border: 1px solid #005cbf;
     background-color: #005cbf;
     /*#007bff;*/
@@ -94,13 +99,16 @@ input::-webkit-input-placeholder {
 }
 
 .button-config {
-    height: 100%;
-    width: 20%;
-    background-color: darkseagreen;
-    border: 1px solid darkseagreen;
-    /*darkseagreen*/
+    height: 30px;
+    width: 90px;
+    /*background-color: darkseagreen;*/
+    /*border: 1px solid darkseagreen;*/
+    background-color: dodgerblue;
+    border: 1px solid dodgerblue;
+    border-radius: 2px;
     color: white;
     outline: none;
+    font-size: 12px;
 }
 
 .button-config-add {

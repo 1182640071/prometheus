@@ -27,7 +27,7 @@
 {{define "content"}}
 <div style="position: absolute; height: 80%; width: 100%;" >
   <h1 style="margin-left: 2%">Configuration</h1>
-  <div style="position: absolute; left: 1%; top: 9%; height: 33%; width: 96% ; border: 1px solid lightgrey">
+  <div style="position: absolute; left: 1%; top: 9%; height: 33%; width: 96% ; border: 1px solid lightgrey; background-color: whitesmoke">
     <div class="config-prometheus" style="position: absolute; left: 1%; top: 6%; height: 100%; width: 96%">
 
       <div class="label-name" style="position: absolute; top: 7%;">
@@ -67,8 +67,8 @@
         <input class="input-input" id="prometheusTimeout" type="text" placeholder="   超时(scrape_timeout)时间....">
       </div>
 
-      <div class="label-name" style="position: absolute; margin-left: 80%; top: 100%;">
-        <button class="button-config" type="submit" onclick="showPConfig()">预览</button>
+      <div class="label-name" style="position: absolute; margin-left: 90%; top: 100%;">
+<!--        <button class="button-config" type="submit" onclick="showPConfig()">预览</button>-->
         <button class="button-config" type="submit" onclick="submitConfiguration()">提交</button>
         <button class="button-config" type="submit" onclick="updatePConfig()">更新文件</button>
       </div>
@@ -76,7 +76,7 @@
     </div>
   </div>
 
-  <div id="changeGroup" style="text-align: center; margin-left: 1%;  position: absolute; top: 48%; height: 50%; width: 98%; z-index: 2">
+  <div id="changeGroup" style="text-align: center; margin-left: 1%;  position: absolute; top: 48%; height: 50%; width: 98%; z-index: 2; ">
     <ul class="label-add" style="height: 50px;">
       <li id="group" class="li-left">
         <a href="javascript:changeNode('group')" >组设置</a>
