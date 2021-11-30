@@ -177,7 +177,11 @@ function updatePConfig(){
             return false;
         },
         success: function (result) {
-            alert(result);
+            if(result.code == 0){
+                alert("更新成功，reload后生效");
+            }else{
+                alert(result.msg);
+            }
         }
     })
 

@@ -12,12 +12,13 @@
 prometheus.yml可以创建一个最简单的，后续由prometheus监管平台来管理
 basic.conf如下：
 > basic.conf 内容:  
-[mysql]  
-username=root           //mysql数据库用户名  
-password=Test123!@#     //mysql用户密码  
-ip=10.36.3.123          //mysql地址  
-port=3306               //mysql端口  
-dbname=prometheus       //mysql库  
+[db]
+drivername=postgres     //驱动类型 目前只支持postgres，后续会对mysql进行适配
+username=postgres           //数据库用户名  
+password=postgres     //用户密码  
+ip=10.36.3.123          //地址  
+port=5432               //端口  
+dbname=prometheus       //库  
 maxIdleConns=10  
 maxOpenConns=3  
 

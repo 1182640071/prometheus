@@ -2,9 +2,11 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 	"github.com/prometheus/prometheus/service/baseconfig"
 	"strings"
 )
@@ -23,10 +25,18 @@ func InitDB(logger log.Logger){
 	ip       := baseconfig.BasicConfigs.Ip
 	port 	 := baseconfig.BasicConfigs.Port
 	dbName   := baseconfig.BasicConfigs.Dbname
+	dbDriverName := baseconfig.BasicConfigs.DbDriverName
 
-	path := strings.Join([]string{userName, ":", password, "@tcp(", ip, ":", port, ")/", dbName, "?charset=utf8"}, "")
+	path := ""
+	if dbDriverName == "mysql"{
+		path = strings.Join([]string{userName, ":", password, "@tcp(", ip, ":", port, ")/", dbName, "?charset=utf8"}, "")
+	}else if dbDriverName == "postgres"{
+		path = strings.Join([]string{"host=", ip, " port=" , port, " user=", userName, " password=", password, " dbname=", dbName, " sslmode=disable"}, "")
+	}
+	fmt.Println(path)
 	var err error = nil
-	DB, err = sql.Open("mysql", path)
+	//DB, err = sql.Open("mysql", path)
+	DB, err = sql.Open(dbDriverName, path)
 	if err != nil{
 		panic(err)
 	}
@@ -34,6 +44,7 @@ func InitDB(logger log.Logger){
 	DB.SetMaxOpenConns(baseconfig.BasicConfigs.MaxOpenConns)
 
 	if err := DB.Ping(); err != nil{
+		level.Info(logger).Log("msg", "Database Connections init error")
 		panic(err)
 	}
 	level.Info(logger).Log("msg", "Database Connections init success")

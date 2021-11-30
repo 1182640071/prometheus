@@ -11,34 +11,34 @@
         <div class="host-select">
             <input class="host-label-first" disabled="disabled" value="属组:">
             <select id="groups">
-                <option selected style="text-align: center" value="">请选择所属组</option>
-                    <option style="text-align: center" value="tt12">tt12</option>
-                    <option style="text-align: center" value="fgscs">fgscs</option>
+<!--                <option selected style="text-align: center" value="">请选择所属组</option>-->
+<!--                    <option style="text-align: center" value="tt12">tt12</option>-->
+<!--                    <option style="text-align: center" value="fgscs">fgscs</option>-->
             </select>
         </div>
 
         <div class="host-select">
             <input class="host-label" disabled="disabled" value="主机名:">
-            <input class="host-input" id="host-name" type="text" placeholder="   设置关键词....">
+            <input class="host-input" id="target-name" type="text" placeholder="   设置关键词....">
         </div>
 
         <div class="host-select">
             <input class="host-label" disabled="disabled" value="IP:">
-            <input class="host-input" id="host-ip" type="text" placeholder="   设置target的IP....">
+            <input class="host-input" id="target-ip" type="text" placeholder="   设置target的IP....">
         </div>
 
         <div class="host-select">
             <input class="host-label" disabled="disabled" value="PORT:">
-            <input class="host-input" id="host-l" type="text" placeholder="   设置target的port....">
+            <input class="host-input" id="target-port" type="text" placeholder="   设置target的port....">
         </div>
 
         <div class="host-select">
             <input class="host-label" disabled="disabled" value="LABEL:">
-            <input class="host-input" id="host-d" type="text" placeholder="   设置label的关键词....">
+            <input class="host-input" id="target-keyword" type="text" placeholder="   设置label的关键词....">
         </div>
 
         <div class="host-select">
-            <button type="submit" onclick="selectHost()">查询</button>
+            <button type="submit" onclick="searchHosts(1)">查询</button>
         </div>
     </div>
 
@@ -56,27 +56,13 @@
                 </tr>
             </thead>
             <tbody id="hosts">
-                <tr>
-                    <td class="host-info" style="display: none">123412341234</td>
-                    <td class="host-info">VB_LOCAL_SC_RTER_2_API_01_10.10.10.10</td>
-                    <td class="host-info">10.10.10.10</td>
-                    <td class="host-info">8080</td>
-                    <td class="host-info">ddcsp</td>
-                    <td class="host-info"></td>
-                    <td><a href="#" onclick="changeStatus('0')">启动</a> | <a href="#" onclick="deleteTarget('id')">删除</a></td>
-                </tr>
 
-                <tr>
-                    <td style="display: none">123412341234</td>
-                    <td class="host-info">VB_LOCAL_SC_RTER_2_API_01_10.10.10.10</td>
-                    <td class="host-info">10.10.10.10</td>
-                    <td class="host-info">8080</td>
-                    <td class="host-info">ddcsp</td>
-                    <td class="host-info">{"test": "11123", "aaa": "3423432"}</td>
-                    <td><a href="#" onclick="changeStatus('0')">启动</a> | <a href="#" onclick="deleteTarget('id')">删除</a></td>
-                </tr>
             </tbody>
         </table>
+        <div style="height: 30px; width: 95%">
+            <div id="showpages" style="float: right;">
+            </div>
+        </div>
     </div>
 
 {{end}}

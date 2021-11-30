@@ -24,6 +24,7 @@ import (
 	"github.com/prometheus/prometheus/service/configuration"
 	"github.com/prometheus/prometheus/service/db"
 	"github.com/prometheus/prometheus/service/hosts"
+	"github.com/prometheus/prometheus/service/job"
 	"io"
 	"io/ioutil"
 	stdlog "log"
@@ -424,8 +425,13 @@ func New(logger log.Logger, o *Options) *Handler {
 	router.Get("/jobManagement", readyf(h.toJobManagement))
 
 	// 查询所有主机信息
-	router.Get("/searchHosts", hosts.SearchTargets)
+	router.Post("/searchHosts", hosts.SearchTargets)
 	router.Post("/updateTargetStatus", hosts.UpdateTargetsStatus)
+	router.Post("/deleteTarget", hosts.DeleteTargetsStatus)
+
+	//Job配置操作
+	router.Post("/updateGroups", job.UpdateJobInfo)
+	router.Post("/deleteGroups", job.DeleteGroups)
 
 
 	router.Get("/alerts", readyf(h.alerts))

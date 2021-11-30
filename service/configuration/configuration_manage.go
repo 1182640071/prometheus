@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"container/list"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/prometheus/prometheus/service/baseconfig"
@@ -110,11 +111,12 @@ func SubmitConfiguration(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("clean history data fail" + err.Error())
 				goto over
 			}
-			stmt, err := tx.Prepare("insert into configuration (`name`, `finterval`, `rinterval`, `aurl`, `rpath`, `jpath`, `timeout`) values (?, ?, ?, ?, ?, ?, ?)")
+			//stmt, err := tx.Prepare("insert into configuration (\"name\", finterval, rinterval, aurl, rpath, jpath, \"timeout\") values ('11341', '50s', '30s', '/tat/', '/tmp', '/tmp', '50s');")
+			stmt, err := tx.Prepare(`insert into "configuration" ("name", "finterval", "rinterval", "aurl", "rpath", "jpath", "timeout") values ($1, $2, $3, $4, $5, $6, $7)`)
 			if err != nil{
 				fmt.Println("insert prepare fail" + err.Error())
 				jsonResult.Code = 1000
-				jsonResult.Msg = "insert prepare fail"
+				jsonResult.Msg = "insert prepare fail" + err.Error()
 				tx.Rollback()
 				goto over
 			}
@@ -176,11 +178,11 @@ func AddGroupConfiguration(w http.ResponseWriter, r *http.Request) {
 				groupConfiguration.MetricsPath = "/metrics"
 			}
 
-			stmt, err := tx.Prepare("insert into group_config (`name`, `finterval`, `scheme`, `insecure_skip_verify`, `metrics_path`, `match_regulation`, `federalid`, `honor_labels`) values (?, ?, ?, ?, ?, ?, ?, ?)")
+			stmt, err := tx.Prepare(`insert into group_config ("name", "finterval", "scheme", "insecure_skip_verify", "metrics_path", "match_regulation", "federalid", "honor_labels") values ($1, $2, $3, $4, $5, $6, $7, $8)`)
 			if err != nil{
-				fmt.Println("insert prepare fail")
+				fmt.Println("insert prepare fail" + err.Error())
 				jsonResult.Code = 1000
-				jsonResult.Msg = "insert prepare fail"
+				jsonResult.Msg = "insert prepare fail" + err.Error()
 				tx.Rollback()
 				goto over
 			}
@@ -329,11 +331,11 @@ func AddHostConfig(w http.ResponseWriter, r *http.Request) {
 
 			hostID := "H" + formatTimeStr + common.RandChar(6)
 
-			stmt, err := tx.Prepare("insert into host_config (`id`, `name`, `ip`, `port`, `group_id`, `label`, `status`) values (?, ?, ?, ?, ?, ?, ?)")
+			stmt, err := tx.Prepare(`insert into host_config ("id", "name", "ip", "port", "group_id", "label", "status") values ($1, $2, $3, $4, $5, $6, $7)`)
 			if err != nil{
-				fmt.Println(err)
+				fmt.Println(err.Error())
 				jsonResult.Code = 1000
-				jsonResult.Msg = "insert prepare fail"
+				jsonResult.Msg = "insert prepare fail" + err.Error()
 				tx.Rollback()
 				goto over
 			}
@@ -348,9 +350,9 @@ func AddHostConfig(w http.ResponseWriter, r *http.Request) {
 				hostConfiguration.Status,
 			)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Println(err.Error())
 				jsonResult.Code = 1000
-				jsonResult.Msg = "insert exec fail"
+				jsonResult.Msg = "insert exec fail" + err.Error()
 				tx.Rollback()
 				goto over
 			}
@@ -452,6 +454,9 @@ func RewritePrometheusYmlConfig() (int, string){
 // WriteToFile /* 文件操作 */
 // os.O_TRUNC 覆盖写入，不加则追加写入
 func WriteToFile(fileName string, content string) error {
+
+	// TODO 添加文件存在判断，不存在时创建文件
+
 	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	if err != nil {
 		fmt.Println("file create failed. err: " + err.Error())
@@ -518,7 +523,10 @@ func selectPrometheusConfiguration() (Configuration, error){
 	err := db.DB.QueryRow("select name, finterval, rinterval, aurl, rpath, jpath, timeout from configuration limit 1 ").Scan(
 		&configuration.Name, &configuration.Interval, &configuration.RInterval, &configuration.AUrl, &configuration.RPath, &configuration.JPath, &configuration.TimetOut)
 	if err != nil{
-		fmt.Println(err)
+		if err == sql.ErrNoRows {
+			return configuration, nil
+		}
+		fmt.Println(err.Error())
 		return configuration, err
 	}
 	return configuration, nil
@@ -619,6 +627,26 @@ func deletePrometheusConfiguration() error{
 		return err
 	}else {
 		stmt, err := tx.Prepare("delete from configuration")
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		_, err = stmt.Exec()
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		tx.Commit()
+	}
+	return err
+}
+
+func DbOper(sql string) error {
+	tx, err := db.DB.Begin()
+	if err != nil {
+		return err
+	}else {
+		stmt, err := tx.Prepare(sql)
 		if err != nil {
 			tx.Rollback()
 			return err

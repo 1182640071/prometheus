@@ -95,3 +95,12 @@ td {
     background-color: whitesmoke;
 }
 
+.job-title-label {
+    background-color: #005cbf;
+}
+
+.job-title {
+    color: white;
+    font-size: 15px;
+}
+

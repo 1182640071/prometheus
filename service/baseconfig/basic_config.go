@@ -20,11 +20,12 @@ const Tls = "tls_config:\n      insecure_skip_verify: true"
 
 
 type BasicConfig struct {
-	Username string
-	Password string
-	Ip       string
-	Port     string
-	Dbname   string
+	Username 		string
+	Password 		string
+	Ip       		string
+	Port     		string
+	Dbname   		string
+	DbDriverName 	string
 
 	MaxIdleConns int
 	MaxOpenConns int
@@ -42,32 +43,42 @@ func InitBasicConfig(configPath string, logger log.Logger) {
 		panic(err)
 	}
 
-	BasicConfigs.Username, err = cfg.GetValue("mysql", "username")
+	BasicConfigs.DbDriverName, err = cfg.GetValue("db", "drivername")
 	if err != nil{
 		panic(err)
 	}
 
-	BasicConfigs.Password, err = cfg.GetValue("mysql", "password")
+	BasicConfigs.Username, err = cfg.GetValue("db", "username")
 	if err != nil{
 		panic(err)
 	}
 
-	BasicConfigs.Ip, err = cfg.GetValue("mysql", "ip")
+	BasicConfigs.Username, err = cfg.GetValue("db", "username")
 	if err != nil{
 		panic(err)
 	}
 
-	BasicConfigs.Port, err = cfg.GetValue("mysql", "port")
+	BasicConfigs.Password, err = cfg.GetValue("db", "password")
 	if err != nil{
 		panic(err)
 	}
 
-	BasicConfigs.Dbname, err = cfg.GetValue("mysql", "dbname")
+	BasicConfigs.Ip, err = cfg.GetValue("db", "ip")
 	if err != nil{
 		panic(err)
 	}
 
-	maxIdleConns, err := cfg.GetValue("mysql", "maxIdleConns")
+	BasicConfigs.Port, err = cfg.GetValue("db", "port")
+	if err != nil{
+		panic(err)
+	}
+
+	BasicConfigs.Dbname, err = cfg.GetValue("db", "dbname")
+	if err != nil{
+		panic(err)
+	}
+
+	maxIdleConns, err := cfg.GetValue("db", "maxIdleConns")
 	if err != nil{
 		panic(err)
 	}
@@ -76,7 +87,7 @@ func InitBasicConfig(configPath string, logger log.Logger) {
 		panic(err)
 	}
 
-	maxOpenConns, err := cfg.GetValue("mysql", "maxOpenConns")
+	maxOpenConns, err := cfg.GetValue("db", "maxOpenConns")
 	if err != nil{
 		panic(err)
 	}
