@@ -24,6 +24,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.9.5
 	github.com/hashicorp/consul/api v1.1.0
 	github.com/influxdata/influxdb v1.7.7
+	github.com/ivpusic/grpool v1.0.0
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.7
 	github.com/lib/pq v1.10.4

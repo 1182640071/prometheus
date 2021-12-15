@@ -27,8 +27,10 @@ type BasicConfig struct {
 	Dbname   		string
 	DbDriverName 	string
 
-	MaxIdleConns int
-	MaxOpenConns int
+	MaxIdleConns 	int
+	MaxOpenConns 	int
+
+	DingUrl 		string
 
 	PrometheusYmlConfigPath string
 }
@@ -96,8 +98,9 @@ func InitBasicConfig(configPath string, logger log.Logger) {
 		panic(err)
 	}
 
+	BasicConfigs.DingUrl, err = cfg.GetValue("alarm", "ding.url")
+	if err != nil{
+		panic(err)
+	}
 
-	//fmt.Println("============= 加载结果 ================")
-	//fmt.Println(BasicConfigs.ip)
-	//fmt.Println(BasicConfigs.dbname)
 }

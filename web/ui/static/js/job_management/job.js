@@ -38,7 +38,7 @@ function searchGroups(){
                     }
 
                     html = html + '<td style="display: none">' + id + '</td>';
-                    html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="name-' + id + '" value="' + name + '"></td>';
+                    html = html + '<td><input disabled="disabled" style="border: 0; background-color: transparent; outline: none;" id="name-' + id + '" value="' + name + '"></td>';
                     html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="interval-' + id + '" value="' + interval + '"></td>';
                     html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="scheme-' + id + '" value="' + scheme + '"></td>';
                     html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="insecureSkipVerify-' + id + '" value="' + insecureSkipVerify + '"></td>';

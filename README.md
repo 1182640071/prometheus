@@ -7,13 +7,25 @@
     $ git clone https://github.com/1182640071/prometheus.git
     $ cd prometheus
     $ make build
-    $ ./prometheus --config.file=/${your_path}/prometheus.yml --basic.config.file=/${your_path}/basic.conf 
+    $ ./prometheus --config.file=/${your_path}/prometheus.yml \
+    --basic.config.file=/${your_path}/basic.conf  \
+    --storage.tsdb.retention=90d \
+    --storage.tsdb.path=/data  \
+    --storage.remote.read-sample-limit=5e6 \
+    --storage.remote.flush-deadline=60s \
+    --web.read-timeout=2m \
+    --query.timeout=2m \
+    --web.enable-admin-api \
+    --query.max-concurrency=100 \
+    --alertmanager.timeout=10s
+
+    --web.enable-lifecycle 默认为true
 
 prometheus.yml可以创建一个最简单的，后续由prometheus监管平台来管理
 basic.conf如下：
 > basic.conf 内容:  
 [db]
-drivername=postgres     //驱动类型 目前只支持postgres，后续会对mysql进行适配
+drivername=postgres     //驱动类型 目前只支持postgres，后续会对mysql进行适配  
 username=postgres           //数据库用户名  
 password=postgres     //用户密码  
 ip=10.36.3.123          //地址  

@@ -21,6 +21,7 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/gorilla/sessions"
+	"github.com/prometheus/prometheus/service/alert"
 	"github.com/prometheus/prometheus/service/configuration"
 	"github.com/prometheus/prometheus/service/db"
 	"github.com/prometheus/prometheus/service/hosts"
@@ -433,6 +434,10 @@ func New(logger log.Logger, o *Options) *Handler {
 	router.Post("/updateGroups", job.UpdateJobInfo)
 	router.Post("/deleteGroups", job.DeleteGroups)
 
+	// alertmanager告警信息采集
+	router.Post("/sendMessages", alert.SendMessages)
+	router.Get("/sendMessages", alert.SendMessages)
+
 
 	router.Get("/alerts", readyf(h.alerts))
 	router.Get("/graph", readyf(h.graph))
@@ -602,7 +607,7 @@ func (h *Handler) testReady(f http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// FIXME 在此处补全其他不需要登录认证的地址
-		if !ok && r.RequestURI != "/login" && r.RequestURI != "/userAuthentication" && r.RequestURI != "/-/reload"{
+		if !ok && r.RequestURI != "/login" && r.RequestURI != "/userAuthentication" && r.RequestURI != "/-/reload" && r.RequestURI != "/sendMessages"{
 			http.Redirect(w, r, path.Join("/login"), http.StatusFound)
 		}else{
 			if h.isReady() {
@@ -1100,6 +1105,11 @@ func (h *Handler) reload(w http.ResponseWriter, r *http.Request) {
 	h.reloadCh <- rc
 	if err := <-rc; err != nil {
 		http.Error(w, fmt.Sprintf("failed to reload config: %s", err), http.StatusInternalServerError)
+	}else{
+		w.Header().Set("content-type","text/json")
+		w.WriteHeader(200)
+		msg, _ := json.Marshal(map[string]string{"result": "reload success"})
+		w.Write(msg)
 	}
 }
 

@@ -5,7 +5,8 @@
         <meta name="robots" content="noindex,nofollow">
         <title>{{ pageTitle }}</title>
         <link rel="shortcut icon" href="{{ pathPrefix }}/static/img/favicon.ico?v={{ buildVersion }}">
-        <script src="{{ pathPrefix }}/static/vendor/js/jquery-3.3.1.min.js?v={{ buildVersion }}"></script>    
+        <script src="{{ pathPrefix }}/static/vendor/js/jquery-3.3.1.min.js?v={{ buildVersion }}"></script>
+        <script src="{{ pathPrefix }}/static/js/_base.js?v={{ buildVersion }}"></script>
         <script src="{{ pathPrefix }}/static/vendor/js/popper.min.js?v={{ buildVersion }}"></script>
         <script src="{{ pathPrefix }}/static/vendor/bootstrap-4.3.1/js/bootstrap.min.js?v={{ buildVersion }}"></script>
 
@@ -68,6 +69,8 @@
                                 <a class="dropdown-item" href="{{ pathPrefix }}/jobManagement">Job Management</a>
                             </div>
                         </li>
+
+                        <li class="nav-item"><a class="nav-link" href="javascript:reload()">Reload</a></li>
                     </ul>
                 </div>
             </div>
@@ -76,3 +79,4 @@
         {{template "content" .}}
     </body>
 </html>
+

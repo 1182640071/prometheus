@@ -398,7 +398,7 @@ func RewritePrometheusYmlConfig() (int, string){
 	prometheuYmlConfig = strings.Replace(prometheuYmlConfig, "{{ scrape_timeout }}", configuration.TimetOut, -1)
 	prometheuYmlConfig = strings.Replace(prometheuYmlConfig, "{{ evaluation_interval }}", configuration.RInterval, -1)
 	prometheuYmlConfig = strings.Replace(prometheuYmlConfig, "{{ targets }}", configuration.AUrl, -1)
-	prometheuYmlConfig = strings.Replace(prometheuYmlConfig, "{{ rule_path }}", configuration.RPath, -1)
+	prometheuYmlConfig = strings.Replace(prometheuYmlConfig, "{{ rule_path }}", path.Join(configuration.RPath, "*.yml"), -1)
 
 	// 获取所有group信息
 	groupList, err = selectGroupConfiguration()

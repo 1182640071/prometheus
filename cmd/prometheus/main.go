@@ -19,7 +19,9 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"github.com/prometheus/prometheus/service/alert"
 	"github.com/prometheus/prometheus/service/baseconfig"
+	"github.com/prometheus/prometheus/service/common"
 	"net"
 	"net/http"
 	_ "net/http/pprof" // Comment this line to disable pprof endpoint.
@@ -148,10 +150,10 @@ func main() {
 	a.HelpFlag.Short('h')
 
 	a.Flag("config.file", "Prometheus configuration file path.").
-		Default("/Users/wangminglang/Downloads/prometheus.yml").StringVar(&cfg.configFile)
+		Default("/etc/prometheus/prometheus.yml").StringVar(&cfg.configFile)
 
 	a.Flag("basic.config.file", "basic configuration file path.").
-		Default("/Users/wangminglang/Downloads/basic.conf").StringVar(&cfg.basicFile)
+		Default("/etc/prometheus/basic.conf").StringVar(&cfg.basicFile)
 
 	a.Flag("web.listen-address", "Address to listen on for UI, API, and telemetry.").
 		Default("0.0.0.0:9090").StringVar(&cfg.web.ListenAddress)
@@ -175,7 +177,7 @@ func main() {
 		PlaceHolder("<path>").StringVar(&cfg.web.UserAssetsPath)
 
 	a.Flag("web.enable-lifecycle", "Enable shutdown and reload via HTTP request.").
-		Default("false").BoolVar(&cfg.web.EnableLifecycle)
+		Default("true").BoolVar(&cfg.web.EnableLifecycle)
 
 	a.Flag("web.enable-admin-api", "Enable API endpoints for admin control actions.").
 		Default("false").BoolVar(&cfg.web.EnableAdminAPI)
@@ -273,6 +275,7 @@ func main() {
 	}
 
 	logger := promlog.New(&cfg.promlogConfig)
+	common.Logger = logger
 
 	//初始化配置参数
 	baseconfig.InitBasicConfig(cfg.basicFile, logger)
@@ -280,6 +283,9 @@ func main() {
 
 	// 初始化数据库链接
 	db.InitDB(logger)
+
+	// 启动发送告警
+	go alert.SendAlert()
 
 	cfg.web.ExternalURL, err = computeExternalURL(cfg.prometheusURL, cfg.web.ListenAddress)
 	if err != nil {

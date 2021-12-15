@@ -230,6 +230,8 @@ github.com/hashicorp/serf/coordinate
 github.com/influxdata/influxdb/client/v2
 github.com/influxdata/influxdb/models
 github.com/influxdata/influxdb/pkg/escape
+# github.com/ivpusic/grpool v1.0.0
+github.com/ivpusic/grpool
 # github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 github.com/jmespath/go-jmespath
 # github.com/jpillora/backoff v1.0.0
