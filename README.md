@@ -1,5 +1,5 @@
 # 代码引自：https://github.com/prometheus/prometheus  
-# 在此基础进行2次开发，添加监控设置可视化管控功能，不定期更新新功能  
+# 在此基础进行2次开发，添加监控设置可视化管控功能和钉钉告警功能，不定期更新新功能  
 
 # 部署方式：
     $ mkdir -p $GOPATH/src/github.com/prometheus
