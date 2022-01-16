@@ -35,9 +35,6 @@ dbname=prometheus
 maxIdleConns=10
 maxOpenConns=3
 
-[alarm]
-ding.url=https://oapi.dingtalk.com/robot/send?access_token=dfd60654d**************************************901594a0c05b2
-
 [login]
 metrics=/login,/userAuthentication,/-/reload,/sendMessages,/api/v1
 
