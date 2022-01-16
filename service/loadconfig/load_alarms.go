@@ -22,7 +22,6 @@ func Load(){
 	configsAlarm, err := alarm.SelectAlarmConfigurations()
 	if err != nil{
 		level.Error(common.Logger).Log("status", "alarm_config表查询信息加载错误", "err", err.Error())
-		panic(err)
 	}
 
 	tmpMap := make(map[string]string, len(configsAlarm))
