@@ -14,7 +14,6 @@
         <link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/prometheus.css?v={{ buildVersion }}">
         <link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/vendor/bootstrap4-glyphicons/css/bootstrap-glyphicons.min.css?v={{ buildVersion }}">
         <link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/configuration/prometheus-config.css?v={{ buildVersion }}">
-
         <script>
             var PATH_PREFIX = "{{ pathPrefix }}";
             var BUILD_VERSION = "{{ buildVersion }}";
@@ -67,6 +66,13 @@
                                 <a class="dropdown-item" href="{{ pathPrefix }}/configuration">General Management</a>
                                 <a class="dropdown-item" href="{{ pathPrefix }}/hostManagement">Host Management</a>
                                 <a class="dropdown-item" href="{{ pathPrefix }}/jobManagement">Job Management</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Alarm <span class="caret"></span></a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ pathPrefix }}/toAlarmConfiguration">Alarm Management</a>
                             </div>
                         </li>
 

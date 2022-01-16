@@ -21,7 +21,9 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/gorilla/sessions"
+	"github.com/prometheus/prometheus/service/alarm"
 	"github.com/prometheus/prometheus/service/alert"
+	"github.com/prometheus/prometheus/service/baseconfig"
 	"github.com/prometheus/prometheus/service/configuration"
 	"github.com/prometheus/prometheus/service/db"
 	"github.com/prometheus/prometheus/service/hosts"
@@ -407,6 +409,8 @@ func New(logger log.Logger, o *Options) *Handler {
 	router.Get("/toGroup", readyf(h.toGroup))
 	//创建consul对接信息
 	router.Get("/toConsul", readyf(h.toConsul))
+	//告警方式管理页面
+	router.Get("/toAlarmConfiguration", readyf(h.toAlarmConfiguration))
 	//prometheus.yml配置信息提交
 	router.Post("/submitConfiguration", configuration.SubmitConfiguration)
 	//提交group组配置
@@ -434,9 +438,17 @@ func New(logger log.Logger, o *Options) *Handler {
 	router.Post("/updateGroups", job.UpdateJobInfo)
 	router.Post("/deleteGroups", job.DeleteGroups)
 
+	// alarmmanage告警方式
+	router.Post("/addAlarm", alarm.AddAlarmConfig)
+	// 获取alarm告警方式
+	router.Get("/getAlarm", alarm.GetAlarmConfigs)
+	// 删除alarm告警方式
+	router.Post("/deleteAlarm", alarm.DeleteAlarmConfig)
+
 	// alertmanager告警信息采集
 	router.Post("/sendMessages", alert.SendMessages)
 	router.Get("/sendMessages", alert.SendMessages)
+
 
 
 	router.Get("/alerts", readyf(h.alerts))
@@ -606,9 +618,18 @@ func (h *Handler) testReady(f http.HandlerFunc) http.HandlerFunc {
 			}
 		}
 
-		// FIXME 在此处补全其他不需要登录认证的地址
-		if !ok && r.RequestURI != "/login" && r.RequestURI != "/userAuthentication" && r.RequestURI != "/-/reload" && r.RequestURI != "/sendMessages"{
+		// 判断请求接口是否为可不登录访问接口
+		flag := false
+		for _, value := range  baseconfig.BasicConfigs.NoNeedLoginMetrics{
+			if strings.HasPrefix(r.RequestURI, value) {
+				flag = true
+				break
+			}
+		}
+
+		if !ok && !flag {
 			http.Redirect(w, r, path.Join("/login"), http.StatusFound)
+
 		}else{
 			if h.isReady() {
 				f(w, r)
@@ -884,6 +905,10 @@ func (h *Handler) configuration(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "configuration/prometheus.html", nil)
 }
 
+//告警方式管理页面
+func (h *Handler) toAlarmConfiguration(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "alarm_management/alarm_management.html", nil)
+}
 
 func (h *Handler) status(w http.ResponseWriter, r *http.Request) {
 	status := struct {

@@ -1,0 +1,61 @@
+{{define "head"}}
+
+
+<script id="graph_template" type="text/x-handlebars-template"></script>
+
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/graph.css?v={{ buildVersion }}">
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/alarm_management/alarm.css?v={{ buildVersion }}">
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/host_management/host.css?v={{ buildVersion }}">
+
+{{end}}
+
+{{define "content"}}
+
+<div class="container-fluid">
+    <div style="margin-top: 10px; font-size: 25px; ">
+        <input class="input-label-alarm" disabled="disabled" value="Job:">
+        <select id="jobs">
+            <option selected style="text-align: center" value="">请选择所属组</option>
+        </select>
+    </div>
+
+    <div style="float: left; margin-top: 10px; font-size: 25px; ">
+        <input class="input-label-alarm" disabled="disabled" value="Receiver:"><input id="receiver" class="input-input-value-url" value="">
+    </div>
+    <div style="float: left; margin-left: 30px; margin-top: 10px; font-size: 25px;">
+        <input class="input-label-alarm" disabled="disabled" value="描述:"><input id="describe" class="input-input-value" value="">
+    </div>
+
+    <div style="float: left; margin-left: 30px; margin-top: 10px; font-size: 25px;">
+        <input class="input-button" type="button" onclick="addAlarm()" value="创建告警方式">
+    </div>
+
+    <div class="table-container" style="clear: both">
+        <table class="table table-sm table-bordered table-striped table-hover" style="margin-top: 90px">
+            <thead>
+            <tr>
+                <th style="display: none"></th>
+                <th>Job</td>
+                <th>Receiver</td>
+                <th>Describe</td>
+                <th>Operate</td>
+            </tr>
+            </thead>
+            <tbody id="alarm_list">
+                <tr>
+                    <td class="alarm-value" style="display: none"></td>
+                    <td class="alarm-value">testcloud</td>
+                    <td class="alarm-value">http://127.0.0.1:9093/api/v1/alerts/sign=fdasdfasdfqwehkjhsfkaksjfbkbjsadfbkjsdbfsakdfjbsdfmfn</td>
+                    <td class="alarm-value">测试告警机器人</td>
+                    <td class="alarm-value">Operate</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
+<script src="{{ pathPrefix }}/static/js/util/util.js?v={{ buildVersion }}"></script>
+<script src="{{ pathPrefix }}/static/js/alarm_management/alarm.js?v={{ buildVersion }}"></script>
+
+{{end}}

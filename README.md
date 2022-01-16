@@ -25,14 +25,21 @@ prometheus.yml可以创建一个最简单的，后续由prometheus监管平台�
 basic.conf如下：
 > basic.conf 内容:  
 [db]
-drivername=postgres     //驱动类型 目前只支持postgres，后续会对mysql进行适配  
-username=postgres           //数据库用户名  
-password=postgres     //用户密码  
-ip=10.36.3.123          //地址  
-port=5432               //端口  
-dbname=prometheus       //库  
-maxIdleConns=10  
-maxOpenConns=3  
+drivername=postgres
+username=postgres
+password=postgres
+ip=10.36.3.123
+port=5432
+dbname=prometheus
+
+maxIdleConns=10
+maxOpenConns=3
+
+[alarm]
+ding.url=https://oapi.dingtalk.com/robot/send?access_token=dfd60654d**************************************901594a0c05b2
+
+[login]
+metrics=/login,/userAuthentication,/-/reload,/sendMessages,/api/v1
 
 sql语句见：SQL.md
 

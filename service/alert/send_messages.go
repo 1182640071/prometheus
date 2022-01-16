@@ -2,9 +2,10 @@ package alert
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/go-kit/kit/log/level"
-	"github.com/prometheus/prometheus/service/baseconfig"
 	"github.com/prometheus/prometheus/service/common"
+	"github.com/prometheus/prometheus/service/loadconfig"
 	"io/ioutil"
 	"net/http"
 	"runtime"
@@ -44,6 +45,7 @@ func SendAlert(){
 	pool := common.NewPool(5)
 
 	for {
+
 		if len(Messages) < 1 {
 			time.Sleep(20*time.Second)
 			continue
@@ -88,14 +90,24 @@ func send(message AlertMessage) error{
 	startTime := message.Alert[0].StartsAt.Format("2006-01-02 15:04:05") //time转string
 	sendTime := time.Now().Format("2006-01-02 15:04:05")
 
-	webHook := baseconfig.BasicConfigs.DingUrl
+	webHook := ""
+
+	jobName := strings.Trim(message.CommonLabels.Job, " ")
+	value, ok := loadconfig.AlarmTypeConfigs[jobName]
+	if !ok {
+		level.Error(common.Logger).Log("status", "不存在" + jobName + "告警方式")
+		return errors.New("不存在" + jobName + "告警方式" )
+	}else{
+		webHook = value
+	}
+
 	content := "> 状态：" + title + " \\n\\n " +
 				"告警key：" + message.CommonLabels.KeyWord + " \\n\\n " +
 				"故障时间：" + startTime + " \\n\\n " +
 				"发送时间：" + sendTime + " \\n\\n " +
 				"实例：" + message.CommonLabels.Name + " \\n\\n " +
 				"节点：" + message.CommonLabels.Instance + " \\n\\n " +
-				"平台：" + message.CommonLabels.Job + " \\n\\n " +
+				"平台：" + jobName + " \\n\\n " +
 				"告警信息：" + message.CommonAnnotations.Description + " \\n\\n "
 
 	if "firing" == message.Status {
@@ -116,12 +128,12 @@ func send(message AlertMessage) error{
 	req.Header.Set("Connection","Close")
 	//发送请求
 	resp, err := client.Do(req)
-	//关闭请求
-	defer resp.Body.Close()
 	if err != nil {
 		level.Error(common.Logger).Log("err", err.Error())
 		return err
 	}
+	//关闭请求
+	defer resp.Body.Close()
 
 	body,_ := ioutil.ReadAll(resp.Body)
 	//body {"errcode":0,"errmsg":"ok"}
@@ -139,6 +151,5 @@ func send(message AlertMessage) error{
 	}else{
 		return nil
 	}
-
 
 }

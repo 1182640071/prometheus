@@ -22,6 +22,7 @@ import (
 	"github.com/prometheus/prometheus/service/alert"
 	"github.com/prometheus/prometheus/service/baseconfig"
 	"github.com/prometheus/prometheus/service/common"
+	"github.com/prometheus/prometheus/service/loadconfig"
 	"net"
 	"net/http"
 	_ "net/http/pprof" // Comment this line to disable pprof endpoint.
@@ -283,6 +284,12 @@ func main() {
 
 	// 初始化数据库链接
 	db.InitDB(logger)
+
+	// 启动时加载一次告警方式
+	loadconfig.Load()
+
+	// 定时加载告警方式
+	go loadconfig.LoadAlarms()
 
 	// 启动发送告警
 	go alert.SendAlert()

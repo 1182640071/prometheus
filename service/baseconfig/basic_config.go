@@ -5,6 +5,7 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"strconv"
+	"strings"
 )
 
 var BasicConfigs BasicConfig
@@ -33,6 +34,8 @@ type BasicConfig struct {
 	DingUrl 		string
 
 	PrometheusYmlConfigPath string
+
+	NoNeedLoginMetrics []string
 }
 
 func InitBasicConfig(configPath string, logger log.Logger) {
@@ -98,9 +101,9 @@ func InitBasicConfig(configPath string, logger log.Logger) {
 		panic(err)
 	}
 
-	BasicConfigs.DingUrl, err = cfg.GetValue("alarm", "ding.url")
+	metrics, err := cfg.GetValue("login", "metrics")
 	if err != nil{
 		panic(err)
 	}
-
+	BasicConfigs.NoNeedLoginMetrics = strings.Split(metrics, ",")
 }

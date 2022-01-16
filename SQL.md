@@ -53,6 +53,15 @@
     CONSTRAINT unique_matches unique (ip, port, group_id)  
     ) ;
 
+    创建告警方式管理表
+    CREATE TABLE alarm_config (  
+    id varchar(50) PRIMARY KEY,  
+    job_id int NOT NULL,  
+    receiver varchar(500) NOT NULL,
+    describe varchar(500),  
+    CONSTRAINT unique_alarm unique (job_id)  
+    ) ;
+
 
 ## mysql:
 

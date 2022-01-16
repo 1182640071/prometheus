@@ -38,15 +38,14 @@ function searchGroups(){
                     }
 
                     html = html + '<td style="display: none">' + id + '</td>';
-                    html = html + '<td><input disabled="disabled" style="border: 0; background-color: transparent; outline: none;" id="name-' + id + '" value="' + name + '"></td>';
-                    html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="interval-' + id + '" value="' + interval + '"></td>';
-                    html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="scheme-' + id + '" value="' + scheme + '"></td>';
-                    html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="insecureSkipVerify-' + id + '" value="' + insecureSkipVerify + '"></td>';
-                    html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="metricsPath-' + id + '" value="' + metricsPath + '"></td>';
-                    html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="matchRegulation-' + id + '" value="' + matchRegulation + '"></td>';
-                    html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="federalid-' + id + '" value="' + federalid + '"></td>';
-                    html = html + '<td><input style="border: 0; background-color: transparent; outline: none;" id="honorLabels-' + id + '" value="' + honorLabels + '"></td>';
-
+                    html = html + '<td><input disabled="disabled" style="width: 98%; border: 0; background-color: transparent; outline: none;" id="name-' + id + '" value="' + name + '"></td>';
+                    html = html + '<td><input style="width: 98%; border: 0; background-color: transparent; outline: none;" id="interval-' + id + '" value="' + interval + '"></td>';
+                    html = html + '<td><input style="width: 98%; border: 0; background-color: transparent; outline: none;" id="scheme-' + id + '" value="' + scheme + '"></td>';
+                    html = html + '<td><input style="width: 98%; border: 0; background-color: transparent; outline: none;" id="insecureSkipVerify-' + id + '" value="' + insecureSkipVerify + '"></td>';
+                    html = html + '<td><input style="width: 98%; border: 0; background-color: transparent; outline: none;" id="metricsPath-' + id + '" value="' + metricsPath + '"></td>';
+                    html = html + '<td><input style="width: 98%; border: 0; background-color: transparent; outline: none;" id="matchRegulation-' + id + '" value="' + matchRegulation + '"></td>';
+                    html = html + '<td><input style="width: 98%; border: 0; background-color: transparent; outline: none;" id="federalid-' + id + '" value="' + federalid + '"></td>';
+                    html = html + '<td><input style="width: 98%; border: 0; background-color: transparent; outline: none;" id="honorLabels-' + id + '" value="' + honorLabels + '"></td>';
                     html = html + '<td><a href="javascript:void(0)" style="color: cadetblue" onClick="updateGroupInfo(\'' + id + '\')">更新</a> | <a href="javascript:void(0)" style="color: darkred" onClick="deleteGroup(\'' + id + '\')">删除</a></td>';
 
                     html = html + "</tr>";

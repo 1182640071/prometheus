@@ -1,35 +1,38 @@
 {{define "head"}}
-<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/host_management/host.css?v={{ buildVersion }}">
+<!--<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/host_management/host.css?v={{ buildVersion }}">-->
+<link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/targets.css?v={{ buildVersion }}">
 <script id="graph_template" type="text/x-handlebars-template"></script>
 <script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
 
 {{end}}
 
 {{define "content"}}
+<div class="container-fluid">
+    <h1>Jobs</h1>
 
-<div style="width: 90%; margin-left: 5%">
-    <table style="width: 100%; border-collapse:collapse; margin-top: 30px">
-        <thead>
+<div class="table-container">
+    <table class="table table-sm table-bordered table-striped table-hover" style="width: 99%">
+        <thead class="job_details">
         <tr class="job-title-label">
-            <td class="job-title" style="display: none"></td>
-            <td class="job-title">Name</td>
-            <td class="job-title">ScrapeInterval</td>
-            <td class="job-title">Scheme</td>
-            <td class="job-title">InsecureSkipVerify</td>
-            <td class="job-title">MetricsPath</td>
-            <td class="job-title">MatchRegulation</td>
-            <td class="job-title">FederalID</td>
-            <td class="job-title">HonorLabels</td>
-            <td class="job-title">Operate</td>
+            <th style="display: none"></th>
+            <th>Name</th>
+            <th>ScrapeInterval</th>
+            <th>Scheme</th>
+            <th>InsecureSkipVerify</th>
+            <th>MetricsPath</th>
+            <th>MatchRegulation</th>
+            <th>FederalID</th>
+            <th>HonorLabels</th>
+            <th>Operate</th>
         </tr>
         </thead>
         <tbody id="group_list">
-            <tr>
-                <td class="host-title"><input style="border: 0; outline: none;"></td>
-            </tr>
+<!--            <tr>-->
+<!--                <td class="host-title"><input style="border: 0; outline: none;"></td>-->
+<!--            </tr>-->
         </tbody>
     </table>
 </div>
-
+</div>
 {{end}}
 <script src="{{ pathPrefix }}/static/js/job_management/job.js"></script>
