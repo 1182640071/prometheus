@@ -23,21 +23,21 @@
 
 prometheus.yml可以创建一个最简单的，后续由prometheus监管平台来管理
 basic.conf如下：
-> basic.conf 内容:  
-[db]
-drivername=postgres
-username=postgres
-password=postgres
-ip=10.36.3.123
-port=5432
+> basic.conf 内容:    
+[db]  
+drivername=postgres  
+username=postgres  
+password=postgres  
+ip=10.36.3.123  
+port=5432  
 dbname=prometheus
-
-maxIdleConns=10
+maxIdleConns=10  
 maxOpenConns=3
+[login]  
+metrics=/login,/userAuthentication,/-/reload,/sendMessages,/api/v1  
 
-[login]
-metrics=/login,/userAuthentication,/-/reload,/sendMessages,/api/v1
 
+metrics是开发不登录也可以对外访问的接口
 sql语句见：SQL.md
 
 
