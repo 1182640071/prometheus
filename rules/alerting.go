@@ -35,7 +35,7 @@ import (
 	"github.com/prometheus/prometheus/pkg/timestamp"
 	"github.com/prometheus/prometheus/promql"
 	"github.com/prometheus/prometheus/template"
-	"github.com/prometheus/prometheus/util/strutil"
+	//"github.com/prometheus/prometheus/util/strutil"
 )
 
 const (
@@ -504,10 +504,10 @@ func (r *AlertingRule) String() string {
 // resulting snippet is expected to be presented in a <pre> element, so that
 // line breaks and other returned whitespace is respected.
 func (r *AlertingRule) HTMLSnippet(pathPrefix string) html_template.HTML {
-	alertMetric := model.Metric{
-		model.MetricNameLabel: alertMetricName,
-		alertNameLabel:        model.LabelValue(r.name),
-	}
+	//alertMetric := model.Metric{
+	//	model.MetricNameLabel: alertMetricName,
+	//	alertNameLabel:        model.LabelValue(r.name),
+	//}
 
 	labelsMap := make(map[string]string, len(r.labels))
 	for _, l := range r.labels {
@@ -519,10 +519,12 @@ func (r *AlertingRule) HTMLSnippet(pathPrefix string) html_template.HTML {
 		annotationsMap[l.Name] = html_template.HTMLEscapeString(l.Value)
 	}
 
-	ar := rulefmt.Rule{
-		Alert:       fmt.Sprintf("<a href=%q>%s</a>", pathPrefix+strutil.TableLinkForExpression(alertMetric.String()), r.name),
-		Expr:        fmt.Sprintf("<a href=%q>%s</a>", pathPrefix+strutil.TableLinkForExpression(r.vector.String()), html_template.HTMLEscapeString(r.vector.String())),
-		For:         model.Duration(r.holdDuration),
+	ar := rulefmt.RuleShow{
+		//Alert:       fmt.Sprintf("<a href=%q>%s</a>", pathPrefix+strutil.TableLinkForExpression(alertMetric.String()), r.name),
+		//Expr:        fmt.Sprintf("<a href=%q>%s</a>", pathPrefix+strutil.TableLinkForExpression(r.vector.String()), html_template.HTMLEscapeString(r.vector.String())),
+		Alert:       r.name,
+		Expr:        r.vector.String(),
+		For:         r.holdDuration.String(),
 		Labels:      labelsMap,
 		Annotations: annotationsMap,
 	}

@@ -877,11 +877,13 @@ func (m *Manager) Update(interval time.Duration, files []string, externalLabels 
 func (m *Manager) LoadGroups(
 	interval time.Duration, externalLabels labels.Labels, filenames ...string,
 ) (map[string]*Group, []error) {
+
 	groups := make(map[string]*Group)
 
 	shouldRestore := !m.restored
 
 	for _, fn := range filenames {
+
 		rgs, errs := rulefmt.ParseFile(fn)
 		if errs != nil {
 			return nil, errs
@@ -919,7 +921,6 @@ func (m *Manager) LoadGroups(
 					labels.FromMap(r.Labels),
 				))
 			}
-
 			groups[groupKey(rg.Name, fn)] = NewGroup(rg.Name, fn, itv, rules, shouldRestore, m.opts)
 		}
 	}

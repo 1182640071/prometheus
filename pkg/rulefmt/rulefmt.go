@@ -101,6 +101,15 @@ type Rule struct {
 	Annotations map[string]string `yaml:"annotations,omitempty"`
 }
 
+type RuleShow struct {
+	Record      string            `yaml:"record,omitempty"`
+	Alert       string            `yaml:"alert"`
+	Expr        string            `yaml:"expr"`
+	For         string            `yaml:"for"`
+	Labels      map[string]string `yaml:"labels"`
+	Annotations map[string]string `yaml:"annotations"`
+}
+
 // Validate the rule and return a list of encountered errors.
 func (r *Rule) Validate() (errs []error) {
 	if r.Record != "" && r.Alert != "" {

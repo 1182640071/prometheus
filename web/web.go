@@ -28,6 +28,7 @@ import (
 	"github.com/prometheus/prometheus/service/db"
 	"github.com/prometheus/prometheus/service/hosts"
 	"github.com/prometheus/prometheus/service/job"
+	"github.com/prometheus/prometheus/service/rulesconfig"
 	"io"
 	"io/ioutil"
 	stdlog "log"
@@ -448,6 +449,9 @@ func New(logger log.Logger, o *Options) *Handler {
 	// alertmanager告警信息采集
 	router.Post("/sendMessages", alert.SendMessages)
 	router.Get("/sendMessages", alert.SendMessages)
+
+	// 修改rule规则
+	router.Post("/updateRules", rulesconfig.UpdateRulesConfig)
 
 
 

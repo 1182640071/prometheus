@@ -483,6 +483,7 @@ func main() {
 			// Get all rule files matching the configuration paths.
 			var files []string
 			for _, pat := range cfg.RuleFiles {
+				// /etc/prometheus/rules.d/*.yml
 				fs, err := filepath.Glob(pat)
 				if err != nil {
 					// The only error can be a bad pattern.
