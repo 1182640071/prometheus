@@ -1,6 +1,5 @@
 function updateRules(name){
     let value = $("#" + name + "-rules").html().trim();
-    alert(value);
     if (value == ""){
         alert("告警规则不能为空！");
         return
