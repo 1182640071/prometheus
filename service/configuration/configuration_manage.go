@@ -230,7 +230,7 @@ func GetConfiguration(w http.ResponseWriter, r *http.Request) {
 
 	var jsonResult JsonResultConfiguration
 
-	configuration, err := selectPrometheusConfiguration()
+	configuration, err := SelectPrometheusConfiguration()
 	if err != nil{
 		jsonResult.Code = 1002
 		jsonResult.Msg = "配置信息获取失败"
@@ -386,7 +386,7 @@ over:
 func RewritePrometheusYmlConfig() (int, string){
 	var groupList *list.List
 	var prometheuYmlConfig string
-	configuration, err := selectPrometheusConfiguration()
+	configuration, err := SelectPrometheusConfiguration()
 	if err != nil{
 		fmt.Println(err)
 		return 1003, "prometheus.yml基础配置获取失败"
@@ -491,7 +491,7 @@ func RewriteJobFile(groupID string, groupName string) error{
 	contentWriteToFile := "[" + strings.Join(contents, ",") + "]"
 	//groupName := hostConfigurations[0].GroupName
 
-	configuration, err := selectPrometheusConfiguration()
+	configuration, err := SelectPrometheusConfiguration()
 	if err != nil {
 		return err
 	}
@@ -504,7 +504,7 @@ func RewriteJobFile(groupID string, groupName string) error{
 
 // 创建组(Job)后，需要创建对应的yml文件，用于存储监控target节点信息
 func createJobFile(name string) error{
-	configuration, err := selectPrometheusConfiguration()
+	configuration, err := SelectPrometheusConfiguration()
 	if err != nil {
 		return err
 	}
@@ -517,8 +517,8 @@ func createJobFile(name string) error{
 	return nil
 }
 
-// 获取prometheus基础配置
-func selectPrometheusConfiguration() (Configuration, error){
+// SelectPrometheusConfiguration 获取prometheus基础配置
+func SelectPrometheusConfiguration() (Configuration, error){
 	var configuration Configuration
 	err := db.DB.QueryRow("select name, finterval, rinterval, aurl, rpath, jpath, timeout from configuration limit 1 ").Scan(
 		&configuration.Name, &configuration.Interval, &configuration.RInterval, &configuration.AUrl, &configuration.RPath, &configuration.JPath, &configuration.TimetOut)

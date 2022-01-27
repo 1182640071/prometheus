@@ -1,5 +1,6 @@
 {{define "head"}}
 <link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/rules.css?v={{ buildVersion }}">
+<script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
 {{end}}
 
 {{define "content"}}
@@ -9,7 +10,9 @@
       {{range .RuleGroups}}
         <thead>
           <tr>
-            <td colspan="3"><h2><a href="#{{reReplaceAll "([^a-zA-Z0-9])" "$1" .Name}}" id="{{reReplaceAll "([^a-zA-Z0-9])" "$1" .Name}}">{{.Name}}</a></h2></td>
+            <td><h2><a href="#{{reReplaceAll "([^a-zA-Z0-9])" "$1" .Name}}" id="{{reReplaceAll "([^a-zA-Z0-9])" "$1" .Name}}">{{.Name}}</a></h2></td>
+            <td><h4><a href="javascript:updateRules('{{.Name}}')">update</a></h4></td>
+            <td><h4><a href="#">delete</a></h4></td>
             <td><h2>{{if .GetEvaluationTimestamp.IsZero}}Never{{else}}{{since .GetEvaluationTimestamp}} ago{{end}}</h2></td>
             <td><h2>{{humanizeDuration .GetEvaluationDuration.Seconds}}</h2></td>
           </tr>
@@ -23,8 +26,9 @@
             <td style="font-weight:bold">Evaluation Time</td>
           </tr>
           {{range .Rules}}
+
           <tr>
-            <td class="rule_cell">{{.HTMLSnippet pathPrefix}}</td>
+            <td class="rule_cell" contenteditable="true" id="{{.Name}}-rules">{{.HTMLSnippet pathPrefix}}</td>
             <td class="state">
               <span class="alert alert-{{ .Health | ruleHealthToClass }} state_indicator text-uppercase">
                 {{.Health}}
@@ -52,3 +56,5 @@
     </table>
   </div>
 {{end}}
+
+<script src="{{ pathPrefix }}/static/js/rules/rules.js"></script>
