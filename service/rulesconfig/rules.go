@@ -61,7 +61,6 @@ func UpdateRulesConfig(w http.ResponseWriter, r *http.Request){
 
 	value = strings.ReplaceAll(RULEHEADER, "{{ name }}", ruleConfig.Name) + "\n"
 	value = value + "  - " + strings.ReplaceAll(ruleConfig.Value, "\n", "\n    ")
-	fmt.Println(value)
 
 	err = configuration.WriteToFile(ruleFilePath, value)
 	if err != nil{
