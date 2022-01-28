@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Rules</title>
+    <link type="text/css" rel="stylesheet" href="{{ pathPrefix }}/static/css/rules.css?v={{ buildVersion }}">
+</head>
+<body style="background-color: whitesmoke">
+<table class="add_rule_table">
+    <thead>
+        <tr>
+            <td class="td-head" colspan="2" >关闭</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="left-td">Name：</td>
+            <td class="right-td" id="rule_name" contenteditable="true"></td>
+        </tr>
+        <tr>
+            <td class="left-td">Exper：</td>
+            <td class="right-td" id="rule_exper" contenteditable="true"></td>
+        </tr>
+        <tr>
+            <td class="left-td">For：</td>
+            <td class="right-td" id="rule_for" contenteditable="true"></td>
+        </tr>
+        <tr>
+            <td class="left-td">KeyWord：</td>
+            <td class="right-td" id="rule_keyword" contenteditable="true"></td>
+        </tr>
+        <tr>
+            <td class="left-td">Level：</td>
+            <td class="right-td" id="rule_level" contenteditable="true"></td>
+        </tr>
+        <tr>
+            <td class="left-td">Service：</td>
+            <td class="right-td" id="rule_service" contenteditable="true"></td>
+        </tr>
+        <tr>
+            <td class="left-td">Description：</td>
+            <td class="right-td" id="rule_description" contenteditable="true"></td>
+        </tr>
+        <tr>
+            <td class="td-head" colspan="2" ><a href="javascript:addRule();">创建</a></td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+
+<script src="{{ pathPrefix }}/static/js/jquery/jquery-2.1.1.js"></script>
+<script src="{{ pathPrefix }}/static/js/util/util.js"></script>
+<script src="{{ pathPrefix }}/static/js/rules/rules.js"></script>
+</html>

@@ -10,3 +10,41 @@ table th tr td h2 {
  display: block;
  font-family: monospace;
 }
+
+.left-td {
+    text-align: right;
+    height: 50px;
+    width: 35%;
+    /*border-bottom: 1px solid lightgrey;*/
+    border-left: 1px solid whitesmoke;
+    color: grey;
+}
+
+.right-td {
+    text-align: left;
+    height: 50px;
+    width: 60%;
+    /*border-bottom: 1px solid lightgrey;*/
+    border-right: 1px solid whitesmoke;
+    color: grey;
+}
+
+.add_rule_table {
+    background-color: white;
+    width: 50%;
+    height: 90%;
+    margin-left: 25%;
+    margin-top: 1%;
+    border-collapse:collapse;
+    border: 1px solid whitesmoke;
+    border-radius: 15px;
+}
+
+.td-head {
+    text-align: right;
+    border: 1px solid whitesmoke;
+    color: grey;
+    font-size: 14px;
+    height: 50px;
+    padding-right: 5px;
+}

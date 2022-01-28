@@ -5,14 +5,18 @@
 
 {{define "content"}}
   <div class="container-fluid">
-    <h2>Rules</h2>
+    <div>
+      <h2 style="float: left">Rules</h2>
+      <button style="float: left; margin-left: 30px; padding: 5px; background-color: #007bff; color: white;
+      border: 1px solid #007bff; width: 100px" onclick="openAddRuleWin()">Add Rule</button>
+    </div>
     <table class="table table-bordered">
       {{range .RuleGroups}}
         <thead>
           <tr>
             <td><h2><a href="#{{reReplaceAll "([^a-zA-Z0-9])" "$1" .Name}}" id="{{reReplaceAll "([^a-zA-Z0-9])" "$1" .Name}}">{{.Name}}</a></h2></td>
             <td><h4><a href="javascript:updateRules('{{.Name}}')">update</a></h4></td>
-            <td><h4><a href="#">delete</a></h4></td>
+            <td><h4><a href="javascript:deleteRules('{{.Name}}')">delete</a></h4></td>
             <td><h2>{{if .GetEvaluationTimestamp.IsZero}}Never{{else}}{{since .GetEvaluationTimestamp}} ago{{end}}</h2></td>
             <td><h2>{{humanizeDuration .GetEvaluationDuration.Seconds}}</h2></td>
           </tr>
@@ -56,5 +60,5 @@
     </table>
   </div>
 {{end}}
-
+<script src="{{ pathPrefix }}/static/js/util/util.js"></script>
 <script src="{{ pathPrefix }}/static/js/rules/rules.js"></script>
