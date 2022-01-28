@@ -71,7 +71,6 @@ function openAddRuleWin(){
 }
 
 function addRule(){
-    alert(1)
     let name = $("#rule_name").html().trim();
     let exper = $("#rule_exper").html().trim();
     let rulefor = $("#rule_for").html().trim();
