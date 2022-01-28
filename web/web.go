@@ -412,6 +412,9 @@ func New(logger log.Logger, o *Options) *Handler {
 	router.Get("/toConsul", readyf(h.toConsul))
 	//告警方式管理页面
 	router.Get("/toAlarmConfiguration", readyf(h.toAlarmConfiguration))
+	// 创建告警规则页面
+	router.Get("/openAddRuleWin", readyf(h.openAddRuleWin))
+
 	//prometheus.yml配置信息提交
 	router.Post("/submitConfiguration", configuration.SubmitConfiguration)
 	//提交group组配置
@@ -452,7 +455,10 @@ func New(logger log.Logger, o *Options) *Handler {
 
 	// 修改rule规则
 	router.Post("/updateRules", rulesconfig.UpdateRulesConfig)
-
+	// 删除rule规则
+	router.Post("/deleteRules", rulesconfig.DeleteRulesConfig)
+	// 添加rule规则
+	router.Post("/addRules", rulesconfig.AddRulesConfig)
 
 
 	router.Get("/alerts", readyf(h.alerts))
@@ -914,6 +920,11 @@ func (h *Handler) toAlarmConfiguration(w http.ResponseWriter, r *http.Request) {
 	h.executeTemplate(w, "alarm_management/alarm_management.html", nil)
 }
 
+//告警方式管理页面
+func (h *Handler) openAddRuleWin(w http.ResponseWriter, r *http.Request) {
+	h.executeTemplate(w, "rules_add.html", nil)
+}
+
 func (h *Handler) status(w http.ResponseWriter, r *http.Request) {
 	status := struct {
 		Birth               time.Time
@@ -1263,7 +1274,7 @@ func (h *Handler) getTemplate(name string) (string, error) {
 		return nil
 	}
 
-	if name != "login.html" && name != "configuration/set-consul.html" && name != "configuration/set-group.html" && name != "configuration/set-host.html" {
+	if name != "login.html" && name != "configuration/set-consul.html" && name != "configuration/set-group.html" && name != "configuration/set-host.html"  && name != "rules_add.html"{
 		err := appendf("_base.html")
 		if err != nil {
 			return "", errors.Wrap(err, "error reading base template")
