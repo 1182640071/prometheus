@@ -371,9 +371,9 @@ func New(logger log.Logger, o *Options) *Handler {
 
 		timestamp := time.Now().Unix()
 
-		err = db.DB.QueryRow("select name, password, role from platform_user limit 1 ").Scan(&user.Username, &user.Password, &user.Role)
+		err = db.DB.QueryRow("select name, password, role from platform_user where name=$1 and password=$2 limit 1 ", user.Username, user.Password).Scan(&user.Username, &user.Password, &user.Role)
 		if err != nil{
-			fmt.Println(err)
+			fmt.Println(err.Error())
 			code = 1001
 			des = "username or password incorrect"
 			goto over
@@ -382,7 +382,6 @@ func New(logger log.Logger, o *Options) *Handler {
 		if user.Role != "" {
 			code = 0
 			des = "login success"
-
 			session.Values["validPeriod"] = timestamp
 			session.Save(r,w)
 
